@@ -29,9 +29,10 @@ h2 {
     color: var(--main-text);
 }
 
+/* ---- welcome panel ---- */
+
 .gradient {
-    background: rgb(208,219,234);
-    background: linear-gradient(155deg, rgba(208,219,234,1) 0%, rgba(244,245,247,1) 100%);
+    background: linear-gradient(155deg, var(--outline) 0%, var(--form) 100%);
 }
 
 .welcome {
