@@ -1,0 +1,30 @@
+*, *::after, *::before {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+.container {
+    width: 96%;
+    margin: 0 auto;
+}
+
+h1 {
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--main-text);
+}
+
+h2 {
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--main-text);
+}
+
+.normal-text {
+    font-weight: 400;
+    font-size: 17px;
+    color: var(--main-text);
+}
