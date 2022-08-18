@@ -4,6 +4,9 @@
 
 body {
     font-family: 'Inter', sans-serif;
+    color: var(--main-text);
+    font-weight: 500;
+    font-size: 17px;
 }
 
 .container {
@@ -14,19 +17,10 @@ body {
 h1 {
     font-weight: 700;
     font-size: 22px;
-    color: var(--main-text);
 }
 
 h2 {
     font-weight: 700;
-    font-size: 17px;
-    color: var(--main-text);
-}
-
-.normal-text {
-    font-weight: 500;
-    font-size: 17px;
-    color: var(--main-text);
 }
 
 /* ---- welcome panel ---- */
@@ -36,6 +30,7 @@ h2 {
 }
 
 .welcome {
+    z-index: 1;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -58,12 +53,7 @@ h2 {
 }
 
 .welcome_text {
-    font-weight: 500;
     color: var(--second-text);
-}
-
-.welcome-main__text {
-    font-size: 17px;
 }
 
 .welcome-main__author {
@@ -71,7 +61,7 @@ h2 {
     font-size: 15px;
 }
 
-.welcome-footer_text {
+.welcome-footer__text {
     font-size: 12px;
     animation: pulsing 2s linear infinite;
 }
@@ -80,4 +70,75 @@ h2 {
     0% { color: var(--second-text) }
     50% { color: var(--main-text) }
     100% { color: var(--second-text) }
+}
+
+/* ---- main panel ---- */
+
+.home-header {
+    background-color: var(--primary);
+}
+
+.home-header__container {
+    display: flex;
+    align-items: center;
+    height: 56px;
+}
+
+.home-header__menu-icon {
+    width: 42px;
+}
+
+.home-header__header {
+    margin-left: 50px;
+}
+
+.home-elem {
+    margin-top: 10px;
+    display: flex;
+    height: 120px;
+}
+
+.home-elem__img-div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 110px;
+    border-radius: 16px 0 0 16px;
+    background-color: var(--outline);
+}
+
+.home-elem__img {
+    height: 58px;
+    width: 58px;
+}
+
+.home-elem__texts {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    border-radius: 0 16px 16px 0;
+    background-color: var(--form);
+}
+
+.home-elem__texts-header {
+    margin: 21px 0 0 21px;
+    align-self: flex-start;
+    font-size: 22px;
+}
+
+.home-elem__texts-strap {
+    margin-top: 30px;
+    align-self: flex-start;
+    height: 8px;
+    width: 95%;
+    background-color: var(--white);
+}
+
+.home-elem__texts-directing {
+    margin-bottom: 12px;
+    position: absolute;
+    bottom: 0;
+    font-size: 15px;
 }
