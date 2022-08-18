@@ -23,7 +23,7 @@ h2 {
     font-weight: 700;
 }
 
-/* ---- welcome panel ---- */
+/* ---- ekran powitalny ---- */
 
 .welcome-transition {
     transition-duration: .5s;
@@ -76,7 +76,7 @@ h2 {
     100% { color: var(--second-text) }
 }
 
-/* ---- main panel ---- */
+/* ---- ekran główny ---- */
 
 .homePanel {
     display: none;
@@ -149,4 +149,31 @@ h2 {
     position: absolute;
     bottom: 0;
     font-size: 15px;
+}
+
+/* ---- menu ---- */
+
+.menu {
+    display: none;
+    overflow: hidden;
+    height: 100vh;
+    width: 80vw;
+    background-color: var(--form);
+}
+
+.menu-elem {
+    display: flex;
+    align-items: center;
+    height: 60px;
+}
+
+.menu-elem__img {
+    margin: 0 25px 0 15px;
+    height: 35px;
+    width: 35px;
+}
+
+.menu-strap {
+    height: 8px;
+    background-color: var(--white);
 }
