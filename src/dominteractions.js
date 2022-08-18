@@ -1,12 +1,12 @@
-const _getDOMElem = (attribute, value) => {
-    return document.querySelector(`[${attribute}="${value}"]`)
+const _getDOMElem = (id) => {
+    return document.getElementById(id);
 }
 
-export const mapListToDOMElements = (listOfValues, attribute) => {
+export const mapListToDOMElements = listOfId => {
     const _viewElems = {}
 
-    for (const value of listOfValues) {
-        _viewElems[value] = _getDOMElem(attribute, value);
+    for (const id of listOfId) {
+        _viewElems[id] = _getDOMElem(id);
     }
 
     return _viewElems;

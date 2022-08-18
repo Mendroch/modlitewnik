@@ -25,12 +25,16 @@ h2 {
 
 /* ---- welcome panel ---- */
 
-.gradient {
+.welcome-transition {
+    transition-duration: .5s;
+    transition-property: opacity;
+}
+
+.welcome-gradient {
     background: linear-gradient(155deg, var(--outline) 0%, var(--form) 100%);
 }
 
 .welcome {
-    z-index: 1;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -73,6 +77,10 @@ h2 {
 }
 
 /* ---- main panel ---- */
+
+.homePanel {
+    display: none;
+}
 
 .home-header {
     background-color: var(--primary);

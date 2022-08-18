@@ -10,7 +10,41 @@
     <link rel="stylesheet" href="css/main.css">
     <title>Modlitewnik</title>
 </head>
-<body id="body">
+<body id="body" class="welcome-transition">
+    <!-- Ekran powitalny -->
+    <div id="welcomePanel" class="welcome-gradient">
+        <div class="welcome">
+            <div class="welcome-main">
+                <img src="img/pray.png" alt="pray" class="welcome-main__icon">
+                <p id="welcomeQuote" class="welcome_text"></p>
+                <p id="welcomeQuoteAuthor" class="welcome-main__author welcome_text"></p>
+            </div>
+            <p class="welcome-footer__text welcome_text">Dotknij ekranu aby kontynuować...</p>
+        </div>
+    </div>
+
+    <!-- Ekran główny -->
+    <div id="homePanel" class="homePanel">
+        <header class="home-header">
+            <div class="container home-header__container">
+                <img src="img/menu.png" class="home-header__menu-icon">
+                <h1 class="home-header__header">Ekran główny</h1>
+            </div>
+        </header>
+        <main class="container">
+            <div class="home-elem">
+                <div class="home-elem__img-div">
+                    <img src="img/music-book.png" class="home-elem__img">
+                </div>
+                <div class="home-elem__texts">
+                    <p class="home-elem__texts-header">PIEŚNI</p>
+                    <div class="home-elem__texts-strap"></div>
+                    <p class="home-elem__texts-directing">PRZEDŹ DO PIEŚNI</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
     <script src="src/app.js" type="module"></script>
 </body>
 </html>
