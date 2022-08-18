@@ -1,48 +1,14 @@
-import { mapListToDOMElements, createDOMElem } from './dominteractions.js'
+import { createWelcome } from './generatingviews.js'
 
 class Prayer {
     constructor() {
         this.body = document.getElementById('body')
-        this.createWelcome()
+        createWelcome()
     }
 
-    createWelcome = () => {
-        this.body.classList.add('gradient')
-        this.body.addEventListener('click', this.destroyWelcome)
-        let quote = this.getQuote()
 
-        const welcome = createDOMElem('div', 'welcome')
-        const welcomeMain = createDOMElem('div', 'welcome-main')
-        const welcomeMainIcon = createDOMElem('img', 'welcome-main__icon', null, '../img/pray.png')
-        const welcomeMainText = createDOMElem('p', 'welcome-main__text welcome_text', quote[0])
-        const welcomeMainAuthor = createDOMElem('p', 'welcome-main__author welcome_text', quote[1])
-        const welcomeFooterText = createDOMElem('p', 'welcome-footer_text welcome_text', 'Dotknij ekranu aby kontynuować...')
 
-        welcome.appendChild(welcomeMain)
-        welcome.appendChild(welcomeFooterText)
-        welcomeMain.appendChild(welcomeMainIcon)
-        welcomeMain.appendChild(welcomeMainText)
-        welcomeMain.appendChild(welcomeMainAuthor)
-
-        body.appendChild(welcome)
-    }
-
-    destroyWelcome = () => {
-        this.body.removeEventListener('click', this.destroyWelcome)
-        this.body.classList.remove('gradient')
-        this.body.innerHTML = ''
-    }
-
-    getQuote = () => {
-        let quote
-        if (localStorage.getItem('quotes')) {
-            let quotes = JSON.parse(localStorage.getItem('quotes'))
-            quote = quotes[Math.floor(Math.random()*quotes.length)]
-        } else {
-            quote = ['Błąd wczytywania cytatu z Local Storage', 'Krzysztof M']
-        }
-        return quote
-    }
+    // Tworzenie testowej tablicy w Local Storage
 
     // createFileLocalStorage = () => {
     //     let quotes = []
