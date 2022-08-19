@@ -23,6 +23,57 @@ h2 {
     font-weight: 700;
 }
 
+/* ---- reużywalne komponenty ---- */
+
+.mainSearch {
+    display: none;
+    padding: 11px 0;
+}
+
+.mainSearchInput {
+    padding-right: 30px;
+    width: 72%;
+    height: 56px;
+    color: var(--main-text);
+    background-color: var(--form);
+    border: none;
+    outline: none;
+    border-radius: 0 32px 32px 0;
+    font-size: 15px;
+}
+
+.mainLoop {
+    margin-left: 6.5%;
+    padding-left: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 56px;
+    width: 15%;
+    background-color: var(--form);
+    border-radius: 32px 0 0 32px;
+}
+
+.mainHeader {
+    display: none;
+    background-color: var(--primary);
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+}
+
+.mainHeaderContainer {
+    display: flex;
+    align-items: center;
+    height: 56px;
+}
+
+.mainHeaderIcon {
+    width: 42px;
+}
+
+.mainHeaderText {
+    margin-left: 50px;
+}
+
 /* ---- ekran powitalny ---- */
 
 .welcome-transition {
@@ -82,24 +133,6 @@ h2 {
     display: none;
 }
 
-.home-header {
-    background-color: var(--primary);
-}
-
-.home-header__container {
-    display: flex;
-    align-items: center;
-    height: 56px;
-}
-
-.home-header__menu-icon {
-    width: 42px;
-}
-
-.home-header__header {
-    margin-left: 50px;
-}
-
 .home-elem {
     margin-top: 10px;
     display: flex;
@@ -153,12 +186,56 @@ h2 {
 
 /* ---- menu ---- */
 
-.menu {
+.shadow {
     display: none;
-    overflow: hidden;
+    position: fixed;
+    top: 0;
+    z-index: 1;
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    opacity: 60%;
+    animation: shadowOpen .2s ease-in-out;
+}
+
+.shadowClose {
+    animation: shadowClose .2s ease-in-out;
+}
+
+@keyframes shadowOpen {
+    0% { opacity: 0%; }
+    100% { opacity: 60%; }
+}
+
+@keyframes shadowClose {
+    0% { opacity: 60%; }
+    100% { opacity: 0%; }
+}
+
+.menu {
+    position: absolute;
+    top: 0;
+    display: none;
+    overflow-y: scroll;
+    z-index: 1;
     height: 100vh;
     width: 80vw;
     background-color: var(--form);
+    animation: menuOpen .2s ease-in-out;
+}
+
+.menuClose {
+    animation: menuClose .2s ease-in-out;
+}
+
+@keyframes menuOpen {
+    0% { left: -80vw; }
+    100% { left: 0 }
+}
+
+@keyframes menuClose {
+    0% { left: 0; }
+    100% { left: -80vw }
 }
 
 .menu-elem {
@@ -176,4 +253,24 @@ h2 {
 .menu-strap {
     height: 8px;
     background-color: var(--white);
+}
+
+/* ---- kategorie pieśni ---- */
+
+.songs {
+    display: none;
+}
+
+.songs-elem {
+    padding: 0 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    background-color: var(--form);
+    border-bottom: 2px solid var(--white);
+}
+
+.songs-elem__img {
+    width: 30px;
 }

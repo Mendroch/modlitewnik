@@ -11,6 +11,23 @@
     <title>Modlitewnik</title>
 </head>
 <body id="body" class="welcome-transition">
+    <div id="shadow" class="shadow"></div>
+
+    <!-- Pasek menu -->
+
+    <header id="mainHeader" class="mainHeader">
+        <div class="container mainHeaderContainer">
+            <img src="img/menu.png" id="mainHeaderIcon" class="mainHeaderIcon" alt="menu">
+            <h1 id="mainHeaderText" class="mainHeaderText">Ekran główny</h1>
+        </div>
+        <div id="mainSearch" class="mainSearch">
+            <div class="mainLoop">
+                <img src="img/search2.png" alt="search">
+            </div>
+            <input type="text" id="searchInput" class="mainSearchInput" placeholder="Szukaj">
+        </div>
+    </header>
+
     <!-- Ekran powitalny -->
     <div id="welcomePanel" class="welcome-gradient">
         <div class="welcome">
@@ -25,14 +42,8 @@
 
     <!-- Ekran główny -->
     <div id="homePanel" class="homePanel">
-        <header class="home-header">
-            <div class="container home-header__container">
-                <img src="img/menu.png" class="home-header__menu-icon">
-                <h1 class="home-header__header">Ekran główny</h1>
-            </div>
-        </header>
         <main class="container">
-            <div class="home-elem">
+            <div id="songsLink" class="home-elem">
                 <div class="home-elem__img-div">
                     <img src="img/music-book.png" class="home-elem__img">
                 </div>
@@ -48,7 +59,7 @@
     <!-- Menu -->
     <div id="menu" class="menu">
         <div id="menuHome" class="menu-elem">
-            <img src="img/home.png" class="menu-elem__img" alt="home">
+            <img src="img/home.png" id="menuHome" class="menu-elem__img" alt="home">
             <p>Ekran główny</p>
         </div>
         <div class="menu-strap"></div>
@@ -65,6 +76,11 @@
             <img src="img/information.png" class="menu-elem__img" alt="information">
             <p>Informacje</p>
         </div>
+    </div>
+
+    <!-- Ekran wyboru kategorii pieśni -->
+    <div id="songs" class="songs">
+        <main id="songsCategories"></main> 
     </div>
 
     <script src="src/app.js" type="module"></script>
