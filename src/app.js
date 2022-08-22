@@ -3,6 +3,7 @@ import { mapListToDOMElements, createDOMElem } from './dominteractions.js'
 class Prayer {
     constructor() {
         this.viewElems = {}
+        this.songs = this.getSongs()
         this.initializeApp()
         this.getQuote()
         // this.createSongsFile()
@@ -19,14 +20,22 @@ class Prayer {
     }
 
     setupListeners = () => {
-        this.viewElems.welcomePanel.addEventListener('click', this.switchWelcomeView)
+        this.viewElems.welcomePanel.addEventListener('click', () => { 
+            this.switchView(this.viewElems.welcomePanel, this.viewElems.homePanel) 
+        })
         this.viewElems.mainHeaderIcon.addEventListener('click', this.toggleMenu)
         this.viewElems.shadow.addEventListener('click', this.toggleMenu)
-        this.viewElems.menuHome.addEventListener('click', this.toggleMenu)
-        this.viewElems.menuHome.addEventListener('click', this.switchMainView)
-        this.viewElems.songsLink.addEventListener('click', this.switchSongsView)
-        this.viewElems.menuSongs.addEventListener('click', this.switchSongsView)
-        this.viewElems.menuSongs.addEventListener('click', this.toggleMenu)
+        this.viewElems.menuHome.addEventListener('click', () => {
+            this.switchView(this.viewElems.songs, this.viewElems.homePanel)
+            this.toggleMenu()
+        })
+        this.viewElems.songsLink.addEventListener('click', () => {
+            this.switchSongs()
+        })
+        this.viewElems.menuSongs.addEventListener('click', () => {
+            this.switchSongs()
+            this.toggleMenu()
+        })
     }
 
     getQuote = () => {
@@ -39,6 +48,12 @@ class Prayer {
         }
         this.viewElems.welcomeQuote.innerText = quote[0]
         this.viewElems.welcomeQuoteAuthor.innerText = quote[1]
+    }
+
+    getSongs = () => {
+        if (localStorage.getItem('songs')) {
+            return JSON.parse(localStorage.getItem('songs'))
+        } else { alert('Błąd wczytywania songs') } // <- usunąć w oficjalnej wersji
     }
 
     fadeInOut = () => {
@@ -83,32 +98,46 @@ class Prayer {
         }
     }
 
-    switchWelcomeView = () => {
-        this.switchView(this.viewElems.welcomePanel, this.viewElems.homePanel)
-    }
+    switchSongs = (content = 'categories', songsCategory, undoSongs) => {
+        this.viewElems.songsCategories.innerHTML = ""
+        let table
+        let i = 0
 
-    switchMainView = () => {
-        this.switchView(this.viewElems.songs, this.viewElems.homePanel)
-    }
-
-    switchSongsView = () => {
-        this.switchView(this.viewElems.homePanel, this.viewElems.songs, true, 'Szukaj')
-        let songs
-        if (localStorage.getItem('songs')) {
-            songs = JSON.parse(localStorage.getItem('songs'))
-        } else {
-            songs = [['Błąd wczytywania piosenek z Local Storage']]
+        if (undoSongs) {
+            this.viewElems.mainHeaderIcon.src = '../img/menu.png'
+            this.viewElems.mainHeaderIcon.removeEventListener('click', () => { 
+                this.switchSongs('categories', null, true) 
+            })
+            this.viewElems.mainHeaderIcon.addEventListener('click', this.toggleMenu)
         }
 
-        this.viewElems.songsCategories.innerHTML = ""
+        if (content === 'categories') {
+            this.switchView(this.viewElems.homePanel, this.viewElems.songs, true, 'Szukaj')
+            table = this.songs
+        } else if (content === 'songsNames') {
+            this.viewElems.mainHeaderIcon.src = '../img/left-arrow.png'
+            this.viewElems.mainHeaderIcon.removeEventListener('click', this.toggleMenu)
+            this.viewElems.mainHeaderIcon.addEventListener('click', () => {
+                this.switchSongs('categories', null, true)
+            })
+            table = this.songs[songsCategory][1]
+        } else { alert('niema takiego widoku'); return }
 
-        songs.forEach(category => {
-            const songsElem = createDOMElem('div', 'songs-elem')
-            const songsElemText = createDOMElem('p', 'songs-elem__text', category[0])
+        table.forEach(categoryName => {
+            const songsElem = createDOMElem('div', 'songs-elem', null, null, i.toString())
+            songsElem.addEventListener('click', () => {
+                if (content === 'categories') {
+                    this.switchSongs('songsNames', songsElem.dataset.songsCategory)
+                } else {
+                    this.openSongView(songsElem.dataset.songsCategory)
+                }
+            })
+            const songsElemText = createDOMElem('p', 'songs-elem__text', categoryName[0])
             const songsElemImg = createDOMElem('img', 'songs-elem__img', null, '../img/right-arrow.png')
             songsElem.appendChild(songsElemText)
             songsElem.appendChild(songsElemImg)
             this.viewElems.songsCategories.appendChild(songsElem)
+            i++
         });
     }
 
