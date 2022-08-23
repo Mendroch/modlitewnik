@@ -9,17 +9,6 @@ class Prayer {
         this.initializeApp()
     }
 
-    recreateNode = (el, withChildren) => {
-        if (withChildren) {
-          el.parentNode.replaceChild(el.cloneNode(true), el);
-        }
-        else {
-          var newEl = el.cloneNode(false);
-          while (el.hasChildNodes()) newEl.appendChild(el.firstChild);
-          el.parentNode.replaceChild(newEl, el);
-        }
-    }
-
     initializeApp = () => {
         this.connectDOMElements()
         this.setupListeners()
