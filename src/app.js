@@ -29,6 +29,7 @@ class Prayer {
         this.viewElems.shadow.addEventListener('click', this.toggleMenu)
         this.viewElems.menuHome.addEventListener('click', () => {
             this.switchView(this.viewElems.songsCategories, this.viewElems.homePanel)
+            this.editMainHeader()
             this.toggleMenu()
         })
         this.viewElems.songsLink.addEventListener('click', this.switchSongsCategories)
