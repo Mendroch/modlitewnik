@@ -74,6 +74,11 @@ h2 {
     margin-left: 50px;
 }
 
+.mainHeaderTextSmall {
+    margin-left: 35px;
+    font-size: 17px;
+}
+
 /* ---- ekran powitalny ---- */
 
 .welcome-transition {
@@ -273,4 +278,15 @@ h2 {
 
 .songs-elem__img {
     width: 30px;
+}
+
+/* ---- pieśń ---- */
+
+.song {
+    display: none;
+}
+
+.songText {
+    margin: 10px;
+    line-height: 28px;
 }

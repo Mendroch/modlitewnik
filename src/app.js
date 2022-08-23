@@ -4,14 +4,27 @@ class Prayer {
     constructor() {
         this.viewElems = {}
         this.songs = this.getSongs()
+        this.songCategoryNum
+        this.currentView
         this.initializeApp()
-        this.getQuote()
-        // this.createSongsFile()
+    }
+
+    recreateNode = (el, withChildren) => {
+        if (withChildren) {
+          el.parentNode.replaceChild(el.cloneNode(true), el);
+        }
+        else {
+          var newEl = el.cloneNode(false);
+          while (el.hasChildNodes()) newEl.appendChild(el.firstChild);
+          el.parentNode.replaceChild(newEl, el);
+        }
     }
 
     initializeApp = () => {
         this.connectDOMElements()
         this.setupListeners()
+        this.getQuote()
+        // this.createSongsFile()
     }
 
     connectDOMElements = () => {
@@ -26,14 +39,12 @@ class Prayer {
         this.viewElems.mainHeaderIcon.addEventListener('click', this.toggleMenu)
         this.viewElems.shadow.addEventListener('click', this.toggleMenu)
         this.viewElems.menuHome.addEventListener('click', () => {
-            this.switchView(this.viewElems.songs, this.viewElems.homePanel)
+            this.switchView(this.viewElems.songsCategories, this.viewElems.homePanel)
             this.toggleMenu()
         })
-        this.viewElems.songsLink.addEventListener('click', () => {
-            this.switchSongs()
-        })
+        this.viewElems.songsLink.addEventListener('click', this.switchSongsCategories)
         this.viewElems.menuSongs.addEventListener('click', () => {
-            this.switchSongs()
+            this.switchSongsCategories()
             this.toggleMenu()
         })
     }
@@ -64,21 +75,54 @@ class Prayer {
         }
     }
 
-    switchView = (viewClose, viewOpen, searchInput = false, text = 'Ekran główny') => {
+    editMainHeader = (searchInput = false, text = 'Ekran główny', arrow = false, smallText = false) => {
+        if (searchInput) {
+            this.viewElems.mainSearch.style.display = 'flex'
+        } else {
+            this.viewElems.mainSearch.style.display = 'none'
+        }
+
+        this.viewElems.mainHeaderText.innerText = text
+
+        if (arrow) {
+            this.viewElems.mainHeaderIcon.src = '../img/left-arrow.png'
+            this.viewElems.mainHeaderIcon.removeEventListener('click', this.toggleMenu)
+            this.viewElems.mainHeaderIcon.addEventListener('click', this.undoView)
+        } else {
+            this.viewElems.mainHeaderIcon.removeEventListener('click', this.undoView)
+            this.viewElems.mainHeaderIcon.addEventListener('click', this.toggleMenu)
+            this.viewElems.mainHeaderIcon.src = '../img/menu.png'
+        }
+
+        if (smallText) {
+            this.viewElems.mainHeaderText.classList.add('mainHeaderTextSmall')
+        } else {
+            this.viewElems.mainHeaderText.classList.remove('mainHeaderTextSmall')
+        }
+    }
+
+    switchView = (viewClose, viewOpen) => {
         this.fadeInOut()
     
         setTimeout(() => {
             this.viewElems.mainHeader.style.display = 'block' // <- to trzeba poprawić
             viewClose.style.display = 'none'
             viewOpen.style.display = 'block'
-            if (searchInput) {
-                this.viewElems.mainSearch.style.display = 'flex'
-            } else {
-                this.viewElems.mainSearch.style.display = 'none'
-            }
-            this.viewElems.mainHeaderText.innerText = text
             this.fadeInOut()
         }, 100)
+    }
+
+    undoView = () => {
+        if (this.currentView === 'songsTitles')  {
+            this.switchSongsCategories()
+            this.viewElems.songsTitles.style.display = 'none'
+            this.editMainHeader(true, 'Szukaj')
+        }
+        if (this.currentView === 'song') {
+            this.switchSongsTitles(this.songCategoryNum)
+            this.viewElems.song.style.display = 'none'
+            this.editMainHeader(true, 'Szukaj', true)
+        }
     }
 
     toggleMenu = () => {
@@ -98,47 +142,58 @@ class Prayer {
         }
     }
 
-    switchSongs = (content = 'categories', songsCategory, undoSongs) => {
-        this.viewElems.songsCategories.innerHTML = ""
-        let table
+    createSongSelection = (text) => {
+        const songsElem = createDOMElem('div', 'songs-elem')
+        const songsElemText = createDOMElem('p', 'songs-elem__text', text)
+        const songsElemImg = createDOMElem('img', 'songs-elem__img', null, '../img/right-arrow.png')
+        songsElem.appendChild(songsElemText)
+        songsElem.appendChild(songsElemImg)
+        return songsElem
+    }
+
+    switchSongsCategories = () => {
+        this.viewElems.songsCategories.innerHTML = ''
+        this.switchView(this.viewElems.homePanel, this.viewElems.songsCategories)
+        this.editMainHeader(true, 'Szukaj')
+
         let i = 0
-
-        if (undoSongs) {
-            this.viewElems.mainHeaderIcon.src = '../img/menu.png'
-            this.viewElems.mainHeaderIcon.removeEventListener('click', () => { 
-                this.switchSongs('categories', null, true) 
-            })
-            this.viewElems.mainHeaderIcon.addEventListener('click', this.toggleMenu)
-        }
-
-        if (content === 'categories') {
-            this.switchView(this.viewElems.homePanel, this.viewElems.songs, true, 'Szukaj')
-            table = this.songs
-        } else if (content === 'songsNames') {
-            this.viewElems.mainHeaderIcon.src = '../img/left-arrow.png'
-            this.viewElems.mainHeaderIcon.removeEventListener('click', this.toggleMenu)
-            this.viewElems.mainHeaderIcon.addEventListener('click', () => {
-                this.switchSongs('categories', null, true)
-            })
-            table = this.songs[songsCategory][1]
-        } else { alert('niema takiego widoku'); return }
-
-        table.forEach(categoryName => {
-            const songsElem = createDOMElem('div', 'songs-elem', null, null, i.toString())
+        this.songs.forEach(songCategory => {
+            const songsElem = this.createSongSelection(songCategory[0])
+            songsElem.dataset.songsCategory = i
             songsElem.addEventListener('click', () => {
-                if (content === 'categories') {
-                    this.switchSongs('songsNames', songsElem.dataset.songsCategory)
-                } else {
-                    this.openSongView(songsElem.dataset.songsCategory)
-                }
+                this.switchSongsTitles(songsElem.dataset.songsCategory)
             })
-            const songsElemText = createDOMElem('p', 'songs-elem__text', categoryName[0])
-            const songsElemImg = createDOMElem('img', 'songs-elem__img', null, '../img/right-arrow.png')
-            songsElem.appendChild(songsElemText)
-            songsElem.appendChild(songsElemImg)
             this.viewElems.songsCategories.appendChild(songsElem)
             i++
         });
+    }
+
+    switchSongsTitles = (songCategory) => {
+        this.currentView = 'songsTitles'
+        this.songCategoryNum = songCategory
+        this.viewElems.songsTitles.innerHTML = ''
+        this.switchView(this.viewElems.songsCategories, this.viewElems.songsTitles)
+        this.editMainHeader(true, 'Szukaj', true)
+
+        let i = 0
+        this.songs[songCategory][1].forEach(songTitle => {
+            const songsElem = this.createSongSelection(songTitle[0])
+            songsElem.dataset.songsTitle = i
+            songsElem.addEventListener('click', () => {
+                this.switchSong(songCategory, songsElem.dataset.songsTitle)
+            })
+            this.viewElems.songsTitles.appendChild(songsElem)
+            i++
+        });
+    }
+
+    switchSong = (songCategory, songTitle) => {
+        this.currentView = 'song'
+        this.viewElems.song.innerHTML = ''
+        this.switchView(this.viewElems.songsTitles, this.viewElems.song)
+        this.editMainHeader(false, this.songs[songCategory][1][songTitle][0], true, true)
+        const text = createDOMElem('p', 'songText', this.songs[songCategory][1][songTitle][1])
+        this.viewElems.song.appendChild(text)
     }
 
     createSongsFile = () => {
