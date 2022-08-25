@@ -29,7 +29,6 @@ class Prayer {
         this.viewElems.shadow.addEventListener('click', this.toggleMenu)
         this.viewElems.menuHome.addEventListener('click', () => {
             this.switchView(this.viewElems.songsCategories, this.viewElems.homePanel)
-            this.editMainHeader()
             this.toggleMenu()
         })
         this.viewElems.songsLink.addEventListener('click', this.switchSongsCategories)
@@ -57,14 +56,6 @@ class Prayer {
         } else { alert('Błąd wczytywania songs') } // <- usunąć w oficjalnej wersji
     }
 
-    fadeInOut = () => {
-        if (this.viewElems.body.style.opacity === '1' || this.viewElems.body.style.opacity === '') {
-            this.viewElems.body.style.opacity = '0'
-        } else {
-            this.viewElems.body.style.opacity = '1'
-        }
-    }
-
     editMainHeader = (searchInput = false, text = 'Ekran główny', arrow = false, smallText = false) => {
         if (searchInput) {
             this.viewElems.mainSearch.style.display = 'flex'
@@ -78,26 +69,37 @@ class Prayer {
             this.viewElems.mainHeaderIcon.src = '../img/left-arrow.png'
             this.viewElems.mainHeaderIcon.removeEventListener('click', this.toggleMenu)
             this.viewElems.mainHeaderIcon.addEventListener('click', this.undoView)
+            this.viewElems.mainHeaderIcon.classList.add('is-header__menu__icon--small')
         } else {
             this.viewElems.mainHeaderIcon.removeEventListener('click', this.undoView)
             this.viewElems.mainHeaderIcon.addEventListener('click', this.toggleMenu)
             this.viewElems.mainHeaderIcon.src = '../img/menu.png'
+            this.viewElems.mainHeaderIcon.classList.remove('is-header__menu__icon--small')
         }
 
         if (smallText) {
-            this.viewElems.mainHeaderText.classList.add('mainHeaderTextSmall')
+            this.viewElems.mainHeaderText.classList.add('is-header__menu__header--small')
         } else {
-            this.viewElems.mainHeaderText.classList.remove('mainHeaderTextSmall')
+            this.viewElems.mainHeaderText.classList.remove('is-header__menu__header--small')
         }
     }
 
-    switchView = (viewClose, viewOpen) => {
+    fadeInOut = () => {
+        if (this.viewElems.body.style.opacity === '1' || this.viewElems.body.style.opacity === '') {
+            this.viewElems.body.style.opacity = '0'
+        } else {
+            this.viewElems.body.style.opacity = '1'
+        }
+    }
+
+    switchView = (viewClose, viewOpen, searchInput, text, arrow, smallText) => {
         this.fadeInOut()
     
         setTimeout(() => {
             this.viewElems.mainHeader.style.display = 'block' // <- to trzeba poprawić
             viewClose.style.display = 'none'
             viewOpen.style.display = 'block'
+            this.editMainHeader(searchInput, text, arrow, smallText)
             this.fadeInOut()
         }, 100)
     }
@@ -117,13 +119,13 @@ class Prayer {
 
     toggleMenu = () => {
         if (this.viewElems.menu.style.display === 'block') {
-            this.viewElems.menu.classList.add('menuClose')
-            this.viewElems.shadow.classList.add('shadowClose')
+            this.viewElems.menu.classList.add('is-menu--close')
+            this.viewElems.shadow.classList.add('is-shadow--close')
             setTimeout(() => {
                 this.viewElems.menu.style.display = 'none'
                 this.viewElems.shadow.style.display = 'none'
-                this.viewElems.menu.classList.remove('menuClose')
-                this.viewElems.shadow.classList.remove('shadowClose')
+                this.viewElems.menu.classList.remove('is-menu--close')
+                this.viewElems.shadow.classList.remove('is-shadow--close')
 
             }, 180)
         } else {
@@ -133,9 +135,9 @@ class Prayer {
     }
 
     createSongSelection = (text) => {
-        const songsElem = createDOMElem('div', 'songs-elem')
-        const songsElemText = createDOMElem('p', 'songs-elem__text', text)
-        const songsElemImg = createDOMElem('img', 'songs-elem__img', null, '../img/right-arrow.png')
+        const songsElem = createDOMElem('div', 'c-songs-elem')
+        const songsElemText = createDOMElem('p', null, text)
+        const songsElemImg = createDOMElem('img', 'h-songs-elem__img', null, '../img/right-arrow.png')
         songsElem.appendChild(songsElemText)
         songsElem.appendChild(songsElemImg)
         return songsElem
@@ -143,8 +145,7 @@ class Prayer {
 
     switchSongsCategories = () => {
         this.viewElems.songsCategories.innerHTML = ''
-        this.switchView(this.viewElems.homePanel, this.viewElems.songsCategories)
-        this.editMainHeader(true, 'Szukaj')
+        this.switchView(this.viewElems.homePanel, this.viewElems.songsCategories, true, 'Szukaj')
 
         let i = 0
         this.songs.forEach(songCategory => {
@@ -162,8 +163,7 @@ class Prayer {
         this.currentView = 'songsTitles'
         this.songCategoryNum = songCategory
         this.viewElems.songsTitles.innerHTML = ''
-        this.switchView(this.viewElems.songsCategories, this.viewElems.songsTitles)
-        this.editMainHeader(true, 'Szukaj', true)
+        this.switchView(this.viewElems.songsCategories, this.viewElems.songsTitles, false, 'Szukaj', true)
 
         let i = 0
         this.songs[songCategory][1].forEach(songTitle => {
@@ -180,9 +180,8 @@ class Prayer {
     switchSong = (songCategory, songTitle) => {
         this.currentView = 'song'
         this.viewElems.song.innerHTML = ''
-        this.switchView(this.viewElems.songsTitles, this.viewElems.song)
-        this.editMainHeader(false, this.songs[songCategory][1][songTitle][0], true, true)
-        const text = createDOMElem('p', 'songText', this.songs[songCategory][1][songTitle][1])
+        this.switchView(this.viewElems.songsTitles, this.viewElems.song, false, this.songs[songCategory][1][songTitle][0], true, true)
+        const text = createDOMElem('p', 'c-song', this.songs[songCategory][1][songTitle][1])
         this.viewElems.song.appendChild(text)
     }
 

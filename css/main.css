@@ -25,24 +25,62 @@ h2 {
 
 /* ---- reużywalne komponenty ---- */
 
-.mainSearch {
+.h-display--none {
+    display: none;
+}
+
+.h-display--block {
+    display: block;
+}
+
+.l-margin--small {
+    margin-top: 57px;
+}
+
+.l-margin--medium {
+    margin-top: 66px;
+}
+
+.l-margin--large {
+    margin-top: 136px;
+}
+
+.is-transition {
+    transition-duration: .5s;
+    transition-property: opacity;
+}
+
+/* ---- pasek menu ---- */
+
+.c-header {
+    display: none;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: var(--primary);
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+}
+
+.c-header__menu {
+    display: flex;
+    align-items: center;
+    height: 56px;
+}
+
+.h-header__menu__icon {
+    width: 42px;
+}
+
+.h-header__menu__header {
+    margin-left: 50px;
+}
+
+.c-header__search {
     display: none;
     padding: 11px 0;
 }
 
-.mainSearchInput {
-    padding-right: 30px;
-    width: 72%;
-    height: 56px;
-    color: var(--main-text);
-    background-color: var(--form);
-    border: none;
-    outline: none;
-    border-radius: 0 32px 32px 0;
-    font-size: 15px;
-}
-
-.mainLoop {
+.c-header__search__icon {
     margin-left: 6.5%;
     padding-left: 10px;
     display: flex;
@@ -54,43 +92,34 @@ h2 {
     border-radius: 32px 0 0 32px;
 }
 
-.mainHeader {
-    display: none;
-    background-color: var(--primary);
-    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-}
-
-.mainHeaderContainer {
-    display: flex;
-    align-items: center;
+.c-header__search__input {
+    padding-right: 30px;
+    width: 72%;
     height: 56px;
+    color: var(--main-text);
+    background-color: var(--form);
+    border: none;
+    outline: none;
+    border-radius: 0 32px 32px 0;
+    font-size: 15px;
 }
 
-.mainHeaderIcon {
-    width: 42px;
+.is-header__menu__icon--small {
+    width: 36px;
 }
 
-.mainHeaderText {
-    margin-left: 50px;
-}
-
-.mainHeaderTextSmall {
+.is-header__menu__header--small {
     margin-left: 35px;
     font-size: 17px;
 }
 
 /* ---- ekran powitalny ---- */
 
-.welcome-transition {
-    transition-duration: .5s;
-    transition-property: opacity;
-}
-
-.welcome-gradient {
+.c-welcome--gradient {
     background: linear-gradient(155deg, var(--outline) 0%, var(--form) 100%);
 }
 
-.welcome {
+.c-welcome {
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -99,7 +128,7 @@ h2 {
     width: 80%;
 }
 
-.welcome-main {
+.c-welcome__main {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -107,21 +136,21 @@ h2 {
     height: calc(100vh - 30px);
 }
 
-.welcome-main__icon {
+.c-welcome__icon {
     margin-bottom: 64px;
     width: 100px;
 }
 
-.welcome_text {
+.is-welcome--text-color {
     color: var(--second-text);
 }
 
-.welcome-main__author {
+.c-welcome__author {
     margin-top: 20px;
     font-size: 15px;
 }
 
-.welcome-footer__text {
+.c-welcome__footer {
     font-size: 12px;
     animation: pulsing 2s linear infinite;
 }
@@ -134,17 +163,13 @@ h2 {
 
 /* ---- ekran główny ---- */
 
-.homePanel {
-    display: none;
-}
-
-.home-elem {
+.c-home-elem {
     margin-top: 10px;
     display: flex;
     height: 120px;
 }
 
-.home-elem__img-div {
+.c-home-elem__img-div {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -153,12 +178,12 @@ h2 {
     background-color: var(--outline);
 }
 
-.home-elem__img {
+.c-home-elem__img {
     height: 58px;
     width: 58px;
 }
 
-.home-elem__texts {
+.c-home-elem__texts {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -168,13 +193,13 @@ h2 {
     background-color: var(--form);
 }
 
-.home-elem__texts-header {
+.c-home-elem__header {
     margin: 21px 0 0 21px;
     align-self: flex-start;
     font-size: 22px;
 }
 
-.home-elem__texts-strap {
+.c-home-elem__strap {
     margin-top: 30px;
     align-self: flex-start;
     height: 8px;
@@ -182,7 +207,7 @@ h2 {
     background-color: var(--white);
 }
 
-.home-elem__texts-directing {
+.c-home-elem__directing {
     margin-bottom: 12px;
     position: absolute;
     bottom: 0;
@@ -191,7 +216,36 @@ h2 {
 
 /* ---- menu ---- */
 
-.shadow {
+.c-menu {
+    position: absolute;
+    top: 0;
+    display: none;
+    overflow-y: scroll;
+    z-index: 1;
+    height: 100vh;
+    width: 80vw;
+    background-color: var(--form);
+    animation: menuOpen .2s ease-in-out;
+}
+
+.c-menu-elem {
+    display: flex;
+    align-items: center;
+    height: 60px;
+}
+
+.c-menu-elem__img {
+    margin: 0 25px 0 15px;
+    height: 35px;
+    width: 35px;
+}
+
+.c-menu__strap {
+    height: 8px;
+    background-color: var(--white);
+}
+
+.is-shadow {
     display: none;
     position: fixed;
     top: 0;
@@ -203,7 +257,7 @@ h2 {
     animation: shadowOpen .2s ease-in-out;
 }
 
-.shadowClose {
+.is-shadow--close {
     animation: shadowClose .2s ease-in-out;
 }
 
@@ -217,19 +271,7 @@ h2 {
     100% { opacity: 0%; }
 }
 
-.menu {
-    position: absolute;
-    top: 0;
-    display: none;
-    overflow-y: scroll;
-    z-index: 1;
-    height: 100vh;
-    width: 80vw;
-    background-color: var(--form);
-    animation: menuOpen .2s ease-in-out;
-}
-
-.menuClose {
+.is-menu--close {
     animation: menuClose .2s ease-in-out;
 }
 
@@ -243,30 +285,9 @@ h2 {
     100% { left: -80vw }
 }
 
-.menu-elem {
-    display: flex;
-    align-items: center;
-    height: 60px;
-}
-
-.menu-elem__img {
-    margin: 0 25px 0 15px;
-    height: 35px;
-    width: 35px;
-}
-
-.menu-strap {
-    height: 8px;
-    background-color: var(--white);
-}
-
 /* ---- kategorie pieśni ---- */
 
-.songs {
-    display: none;
-}
-
-.songs-elem {
+.c-songs-elem {
     padding: 0 15px;
     display: flex;
     align-items: center;
@@ -276,17 +297,13 @@ h2 {
     border-bottom: 2px solid var(--white);
 }
 
-.songs-elem__img {
+.h-songs-elem__img {
     width: 30px;
 }
 
 /* ---- pieśń ---- */
 
-.song {
-    display: none;
-}
-
-.songText {
-    margin: 10px;
+.c-song {
+    margin: 66px 15px 15px 15px;
     line-height: 28px;
 }

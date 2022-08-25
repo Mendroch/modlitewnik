@@ -10,81 +10,79 @@
     <link rel="stylesheet" href="css/main.css">
     <title>Modlitewnik</title>
 </head>
-<body id="body" class="welcome-transition">
-    <div id="shadow" class="shadow"></div>
+<body id="body" class="is-transition">
+    <div id="shadow" class="is-shadow"></div>
 
     <!-- Pasek menu -->
-    <header id="mainHeader" class="mainHeader">
-        <div class="container mainHeaderContainer">
-            <img src="img/menu.png" id="mainHeaderIcon" class="mainHeaderIcon" alt="menu">
-            <h1 id="mainHeaderText" class="mainHeaderText">Ekran główny</h1>
+    <header id="mainHeader" class="c-header">
+        <div class="c-header__menu container">
+            <img src="img/menu.png" id="mainHeaderIcon" class="h-header__menu__icon" alt="menu">
+            <h1 id="mainHeaderText" class="h-header__menu__header">Ekran główny</h1>
         </div>
-        <div id="mainSearch" class="mainSearch">
-            <div class="mainLoop">
+        <div id="mainSearch" class="c-header__search">
+            <div class="c-header__search__icon">
                 <img src="img/search2.png" alt="search">
             </div>
-            <input type="text" id="searchInput" class="mainSearchInput" placeholder="Szukaj">
+            <input type="text" id="searchInput" class="c-header__search__input" placeholder="Szukaj">
         </div>
     </header>
 
     <!-- Ekran powitalny -->
-    <div id="welcomePanel" class="welcome-gradient">
-        <div class="welcome">
-            <div class="welcome-main">
-                <img src="img/pray.png" alt="pray" class="welcome-main__icon">
-                <p id="welcomeQuote" class="welcome_text"></p>
-                <p id="welcomeQuoteAuthor" class="welcome-main__author welcome_text"></p>
+    <div id="welcomePanel" class="c-welcome--gradient">
+        <div class="c-welcome">
+            <div class="c-welcome__main">
+                <img src="img/pray.png" alt="pray" class="c-welcome__icon">
+                <p id="welcomeQuote" class="is-welcome--text-color"></p>
+                <p id="welcomeQuoteAuthor" class="c-welcome__author is-welcome--text-color"></p>
             </div>
-            <p class="welcome-footer__text welcome_text">Dotknij ekranu aby kontynuować...</p>
+            <p class="c-welcome__footer is-welcome--text-color">Dotknij ekranu aby kontynuować...</p>
         </div>
     </div>
 
     <!-- Ekran główny -->
-    <div id="homePanel" class="homePanel">
-        <main class="container">
-            <div id="songsLink" class="home-elem">
-                <div class="home-elem__img-div">
-                    <img src="img/music-book.png" class="home-elem__img">
-                </div>
-                <div class="home-elem__texts">
-                    <p class="home-elem__texts-header">PIEŚNI</p>
-                    <div class="home-elem__texts-strap"></div>
-                    <p class="home-elem__texts-directing">PRZEDŹ DO PIEŚNI</p>
-                </div>
+    <main id="homePanel" class="container h-display--none l-margin--medium">
+        <div id="songsLink" class="c-home-elem">
+            <div class="c-home-elem__img-div">
+                <img src="img/music-book.png" class="c-home-elem__img">
             </div>
-        </main>
-    </div>
+            <div class="c-home-elem__texts">
+                <p class="c-home-elem__header">PIEŚNI</p>
+                <div class="c-home-elem__strap"></div>
+                <p class="c-home-elem__directing">PRZEDŹ DO PIEŚNI</p>
+            </div>
+        </div>
+    </main>
 
     <!-- Menu -->
-    <div id="menu" class="menu">
-        <div id="menuHome" class="menu-elem">
-            <img src="img/home.png" id="menuHome" class="menu-elem__img" alt="home">
+    <div id="menu" class="c-menu">
+        <div id="menuHome" class="c-menu-elem">
+            <img src="img/home.png" id="menuHome" class="c-menu-elem__img" alt="home">
             <p>Ekran główny</p>
         </div>
-        <div class="menu-strap"></div>
-        <div id="menuSongs" class="menu-elem">
-            <img src="img/music-book.png" class="menu-elem__img" alt="music book">
+        <div class="c-menu__strap"></div>
+        <div id="menuSongs" class="c-menu-elem">
+            <img src="img/music-book.png" class="c-menu-elem__img" alt="music book">
             <p>Pieśni</p>
         </div>
-        <div class="menu-strap"></div>
-        <div id="menuSetting" class="menu-elem">
-            <img src="img/settings.png" class="menu-elem__img" alt="setting">
+        <div class="c-menu__strap"></div>
+        <div id="menuSetting" class="c-menu-elem">
+            <img src="img/settings.png" class="c-menu-elem__img" alt="settings">
             <p>Ustawienia</p>
         </div>
-        <div id="menuInfo" class="menu-elem">
-            <img src="img/information.png" class="menu-elem__img" alt="information">
+        <div id="menuInfo" class="c-menu-elem">
+            <img src="img/information.png" class="c-menu-elem__img" alt="information">
             <p>Informacje</p>
         </div>
     </div>
 
     <!-- Ekran wyboru kategorii pieśni -->
-    <main id="songsCategories" class="songs"></main>
+    <main id="songsCategories" class="h-display--none l-margin--large"></main>
 
     <!-- Ekran wyboru pieśni -->
-    <main id="songsTitles" class="songs"></main>
+    <main id="songsTitles" class="h-display--none l-margin--small"></main>
 
     <!-- Ekran pieśni -->
-    <main id="song" class="container song"></main>
+    <main id="song" class="h-display--none"></main>
 
     <script src="src/app.js" type="module"></script>
 </body>
