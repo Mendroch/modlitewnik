@@ -1,21 +1,23 @@
 import { mapListToDOMElements, createDOMElem } from './dominteractions.js'
+import { getQuote, getSongs } from './getdata.js'
 
 class Prayer {
     constructor() {
         this.viewElems = {}
-        this.songs = this.getSongs()
+        this.songs = getSongs()
+        this.temporaryCategoryNum
         this.songCategoryNum
+        this.songTitleNum
+        this.backViewFromSearch
         this.currentView
-        this.searchOpen = false
-        this.songOpen = false
+        this.isSearchOpened = false
         this.initializeApp()
     }
 
     initializeApp = () => {
         this.connectDOMElements()
         this.setupListeners()
-        this.getQuote()
-        // this.searchSong('boż')
+        this.setQuote()
         // this.createSongsFile()
     }
 
@@ -26,7 +28,8 @@ class Prayer {
 
     setupListeners = () => {
         this.viewElems.welcomePanel.addEventListener('click', () => { 
-            this.switchView(this.viewElems.welcomePanel, this.viewElems.homePanel) 
+            this.switchView(this.viewElems.welcomePanel, this.viewElems.homePanel)
+            this.schowHeader() 
         })
         this.viewElems.headerMenuIcon.addEventListener('click', this.toggleMenu)
         this.viewElems.shadow.addEventListener('click', this.toggleMenu)
@@ -34,33 +37,33 @@ class Prayer {
             this.switchView(this.viewElems.songsCategories, this.viewElems.homePanel)
             this.toggleMenu()
         })
-        this.viewElems.songsLink.addEventListener('click', this.switchSongsCategories)
+        this.viewElems.songsLink.addEventListener('click', () => {
+            this.switchView(this.viewElems.homePanel, this.viewElems.songsCategories)
+        })
         this.viewElems.menuSongs.addEventListener('click', () => {
-            this.switchSongsCategories()
+            this.switchView(this.viewElems.homePanel, this.viewElems.songsCategories)
             this.toggleMenu()
         })
-        this.viewElems.headerSearchIcon.addEventListener('click', this.switchSearch)
+        this.viewElems.headerSearchIcon.addEventListener('click', () => {
+            if (this.currentView === 'categories') {
+                this.switchView(this.viewElems.songsCategories, this.viewElems.search)
+            } else if (this.currentView === 'titles') {
+                this.switchView(this.viewElems.songsTitles, this.viewElems.search)
+            }
+        })
         this.viewElems.searchInput.addEventListener('keyup', this.searchSong)
         this.viewElems.searchDelete.addEventListener('click', this.clearInput)
     }
 
-    getQuote = () => {
-        let quote
-        if (localStorage.getItem('quotes')) {
-            let quotes = JSON.parse(localStorage.getItem('quotes'))
-            quote = quotes[Math.floor(Math.random()*quotes.length)]
-        } else {
-            quote = ['Błąd wczytywania cytatu z Local Storage', 'Krzysztof M']
-        }
+    setQuote = () => {
+        let quote = getQuote()
         this.viewElems.welcomeQuote.innerText = quote[0]
         this.viewElems.welcomeQuoteAuthor.innerText = quote[1]
     }
 
-    getSongs = () => {
-        if (localStorage.getItem('songs')) {
-            return JSON.parse(localStorage.getItem('songs'))
-        } else { alert('Błąd wczytywania songs') } // <- usunąć w oficjalnej wersji
-    }
+    schowHeader = () => {
+        this.viewElems.mainHeader.classList.remove('h-display--none') // ?
+    } 
 
     editMainHeader = (searchIcon = false, text = 'Ekran główny', searchInput = false, arrow = false, smallText = false) => {
         if (searchIcon) {
@@ -106,40 +109,47 @@ class Prayer {
         }
     }
 
-    switchView = (viewClose, viewOpen, searchIcon, text, searchInput, arrow, smallText) => {
+    switchView = (viewClose, viewOpen) => {
         this.fadeInOut()
-    
         setTimeout(() => {
-            this.viewElems.mainHeader.style.display = 'block' // <- to trzeba poprawić
             viewClose.classList.add('h-display--none')
-            this.editMainHeader(searchIcon, text, searchInput, arrow, smallText)
+
+            switch (viewOpen) {
+                case this.viewElems.songsCategories:
+                    this.editMainHeader(true, 'Pieśni')
+                    this.switchSongsCategories()
+                break
+                case this.viewElems.songsTitles:
+                    this.editMainHeader(true, 'Pieśni', false, true)
+                    this.switchSongsTitles()
+                break
+                case this.viewElems.song:
+                    this.editMainHeader(false, this.songs[this.songCategoryNum][1][this.songTitleNum][0], false, true, true)
+                    this.switchSong()
+                break
+                case this.viewElems.search:
+                    this.editMainHeader(false, 'Szukaj', true, true)
+                    this.switchSearch()
+                    this.currentView = 'search'
+                break
+            }
+
             viewOpen.classList.remove('h-display--none')
             this.fadeInOut()
         }, 100)
     }
 
     undoView = () => {
-        if (this.searchOpen) {
-            if (this.currentView === 'songsCategories')  {
-                this.switchSongsCategories()
-            } else if (this.currentView === 'songsTitles') {
-                this.switchSongsTitles(this.songCategoryNum)
-            } else if (this.songOpen === true) { /////////////////// tutaj //////////////
-                this.switchSearch()
-                this.songOpen = false
-                return
-            }
-            this.searchOpen = false
-            return
-        }
-        if (this.currentView === 'songsTitles')  {
-            this.switchSongsCategories()
-            this.viewElems.songsTitles.classList.add('h-display--none')
-        }
-        if (this.songOpen === true) { /////////////////// tutaj //////////////
-            this.switchSongsTitles(this.songCategoryNum)
-            this.viewElems.song.classList.add('h-display--none')
-            this.songOpen = false
+        if (this.currentView === 'titles') {
+            this.switchView(this.viewElems.songsTitles, this.viewElems.songsCategories)
+        } else if (this.currentView === 'song' && !this.isSearchOpened) {
+            this.switchView(this.viewElems.song, this.viewElems.songsTitles)
+        } else if (this.currentView === 'search' && this.backViewFromSearch === 'categories') {
+            this.switchView(this.viewElems.search, this.viewElems.songsCategories)
+        } else if (this.currentView === 'search' && this.backViewFromSearch === 'titles') {
+            this.switchView(this.viewElems.search, this.viewElems.songsTitles)
+        } else if (this.currentView === 'song' && this.isSearchOpened) {
+            this.switchView(this.viewElems.song, this.viewElems.search)
         }
     }
 
@@ -170,75 +180,55 @@ class Prayer {
     }
 
     switchSearch = () => {
-        this.searchOpen = true
-        this.viewElems.searchInput.value = ''
-        this.viewElems.search.innerHTML = ''
-        this.viewElems.searchDelete.classList.add('h-display--none')
-        if (this.currentView === 'songsCategories') {
-            this.switchView(this.viewElems.songsCategories, this.viewElems.search, false, 'Pieśni', true, true)
-        }
-        if (this.currentView === 'songsTitles') {
-            this.switchView(this.viewElems.songsTitles, this.viewElems.search, false, 'Pieśni', true, true)
-        }
-        if (this.songOpen == true) { /////////////////// tutaj //////////////
-            this.switchView(this.viewElems.song, this.viewElems.search, false, 'Pieśni', true, true)
-        }
         this.viewElems.searchInput.focus()
-
     }
 
     switchSongsCategories = () => {
-        this.currentView = 'songsCategories'
         this.viewElems.songsCategories.innerHTML = ''
-        if (this.searchOpen) {
-            this.switchView(this.viewElems.search, this.viewElems.songsCategories, true, 'Pieśni')
-        } else {
-            this.switchView(this.viewElems.homePanel, this.viewElems.songsCategories, true, 'Pieśni')
-        }
+        this.currentView = 'categories'
+        this.backViewFromSearch = 'categories'
+        this.isSearchOpened = false
 
         let i = 0
         this.songs.forEach(songCategory => {
             const songsElem = this.createSongSelection(songCategory[0])
             songsElem.dataset.songsCategory = i
             songsElem.addEventListener('click', () => {
-                this.switchSongsTitles(songsElem.dataset.songsCategory)
+                this.songCategoryNum = songsElem.dataset.songsCategory
+                this.switchView(this.viewElems.songsCategories, this.viewElems.songsTitles)
             })
             this.viewElems.songsCategories.appendChild(songsElem)
             i++
         });
     }
 
-    switchSongsTitles = (songCategory) => {
-        this.currentView = 'songsTitles'
-        this.songCategoryNum = songCategory
+    switchSongsTitles = () => {
         this.viewElems.songsTitles.innerHTML = ''
-        if (this.searchOpen) {
-            this.switchView(this.viewElems.search, this.viewElems.songsTitles, true, 'Pieśni', false, true)
-        } else {
-            this.switchView(this.viewElems.songsCategories, this.viewElems.songsTitles, true, 'Pieśni', false, true)
+        if (this.isSearchOpened) {
+            this.songCategoryNum = this.temporaryCategoryNum
         }
-
+        this.currentView = 'titles'
+        this.backViewFromSearch = 'titles'
+        this.isSearchOpened = false
+        this.temporaryCategoryNum = this.songCategoryNum
+   
         let i = 0
-        this.songs[songCategory][1].forEach(songTitle => {
+        this.songs[this.songCategoryNum][1].forEach(songTitle => {
             const songsElem = this.createSongSelection(songTitle[0])
             songsElem.dataset.songsTitle = i
             songsElem.addEventListener('click', () => {
-                this.switchSong(songCategory, songsElem.dataset.songsTitle)
+                this.songTitleNum = songsElem.dataset.songsTitle
+                this.switchView(this.viewElems.songsTitles, this.viewElems.song)
             })
             this.viewElems.songsTitles.appendChild(songsElem)
             i++
         });
     }
 
-    switchSong = (songCategory, songTitle) => {
-        this.songOpen = true /////////////////// tutaj //////////////
+    switchSong = () => {
         this.viewElems.song.innerHTML = ''
-        if (this.searchOpen) {
-            this.switchView(this.viewElems.search, this.viewElems.song, false, this.songs[songCategory][1][songTitle][0], false, true, true)
-        } else {
-            this.switchView(this.viewElems.songsTitles, this.viewElems.song, false, this.songs[songCategory][1][songTitle][0], false, true, true)
-        }
-        const text = createDOMElem('p', 'c-song', this.songs[songCategory][1][songTitle][1])
+        this.currentView = 'song'
+        const text = createDOMElem('p', 'c-song', this.songs[this.songCategoryNum][1][this.songTitleNum][1])
         this.viewElems.song.appendChild(text)
     }
 
@@ -252,6 +242,7 @@ class Prayer {
     searchSong = () => {
         this.viewElems.search.innerHTML = ''
         let inputText = this.viewElems.searchInput.value
+        this.isSearchOpened = true
 
         if (inputText === '') {
             this.viewElems.searchDelete.classList.add('h-display--none')
@@ -269,7 +260,9 @@ class Prayer {
                             const songsElem = this.createSongSelection(songTitle[0])
                             songsElem.dataset.songsTitle = i
                             songsElem.addEventListener('click', () => {
-                                this.switchSong(songCategory, songsElem.dataset.songsTitle)
+                                this.songCategoryNum = songCategory
+                                this.songTitleNum = songsElem.dataset.songsTitle
+                                this.switchView(this.viewElems.search, this.viewElems.song)
                             })
                             this.viewElems.search.appendChild(songsElem)
                         }
