@@ -29,7 +29,6 @@ class Prayer {
     setupListeners = () => {
         this.viewElems.welcomePanel.addEventListener('click', () => { 
             this.switchView(this.viewElems.welcomePanel, this.viewElems.homePanel)
-            this.schowHeader() 
         })
         this.viewElems.headerMenuIcon.addEventListener('click', this.toggleMenu)
         this.viewElems.shadow.addEventListener('click', this.toggleMenu)
@@ -63,7 +62,24 @@ class Prayer {
 
     schowHeader = () => {
         this.viewElems.mainHeader.classList.remove('h-display--none') // ?
-    } 
+    }
+    
+    toggleMenu = () => {
+        if (this.viewElems.menu.style.display === 'block') {
+            this.viewElems.menu.classList.add('is-menu--close')
+            this.viewElems.shadow.classList.add('is-shadow--close')
+            setTimeout(() => {
+                this.viewElems.menu.style.display = 'none'
+                this.viewElems.shadow.style.display = 'none'
+                this.viewElems.menu.classList.remove('is-menu--close')
+                this.viewElems.shadow.classList.remove('is-shadow--close')
+
+            }, 180)
+        } else {
+            this.viewElems.menu.style.display = 'block'
+            this.viewElems.shadow.style.display = 'block'
+        }
+    }
 
     editMainHeader = (searchIcon = false, text = 'Ekran główny', searchInput = false, arrow = false, smallText = false) => {
         if (searchIcon) {
@@ -130,7 +146,10 @@ class Prayer {
                 case this.viewElems.search:
                     this.editMainHeader(false, 'Szukaj', true, true)
                     this.switchSearch()
-                    this.currentView = 'search'
+                break
+                case this.viewElems.homePanel:
+                    this.schowHeader()
+                    this.editMainHeader()
                 break
             }
 
@@ -153,23 +172,6 @@ class Prayer {
         }
     }
 
-    toggleMenu = () => {
-        if (this.viewElems.menu.style.display === 'block') {
-            this.viewElems.menu.classList.add('is-menu--close')
-            this.viewElems.shadow.classList.add('is-shadow--close')
-            setTimeout(() => {
-                this.viewElems.menu.style.display = 'none'
-                this.viewElems.shadow.style.display = 'none'
-                this.viewElems.menu.classList.remove('is-menu--close')
-                this.viewElems.shadow.classList.remove('is-shadow--close')
-
-            }, 180)
-        } else {
-            this.viewElems.menu.style.display = 'block'
-            this.viewElems.shadow.style.display = 'block'
-        }
-    }
-
     createSongSelection = (text) => {
         const songsElem = createDOMElem('div', 'c-songs-elem')
         const songsElemText = createDOMElem('p', null, text)
@@ -177,10 +179,6 @@ class Prayer {
         songsElem.appendChild(songsElemText)
         songsElem.appendChild(songsElemImg)
         return songsElem
-    }
-
-    switchSearch = () => {
-        this.viewElems.searchInput.focus()
     }
 
     switchSongsCategories = () => {
@@ -232,17 +230,27 @@ class Prayer {
         this.viewElems.song.appendChild(text)
     }
 
+    switchSearch = () => {
+        if (!this.isSearchOpened) {
+            this.clearInput()
+        } else this.viewElems.searchInput.focus()
+
+        this.searchSong()
+        this.isSearchOpened = true
+        this.currentView = 'search'
+    }
+
     clearInput = () => {
         this.viewElems.searchInput.value = ''
         this.viewElems.search.innerHTML = ''
         this.viewElems.searchDelete.classList.add('h-display--none')
         this.viewElems.searchInput.focus()
+        this.searchSong()
     }
 
     searchSong = () => {
         this.viewElems.search.innerHTML = ''
         let inputText = this.viewElems.searchInput.value
-        this.isSearchOpened = true
 
         if (inputText === '') {
             this.viewElems.searchDelete.classList.add('h-display--none')
@@ -250,27 +258,27 @@ class Prayer {
             this.viewElems.searchDelete.classList.remove('h-display--none')
         }
 
-        if (inputText !== '' && inputText !== ' ') {
-            this.songs.forEach((_, songCategory) => {
-                let i = 0
-                this.songs[songCategory][1].forEach(songTitle => {
+
+        this.songs.forEach((_, songCategory) => {
+            let i = 0
+            this.songs[songCategory][1].forEach(songTitle => {
     
-                    if (songTitle[0] !== undefined) {
-                        if (songTitle[0].toLowerCase().indexOf(inputText.toLowerCase()) !== -1) {
-                            const songsElem = this.createSongSelection(songTitle[0])
-                            songsElem.dataset.songsTitle = i
-                            songsElem.addEventListener('click', () => {
-                                this.songCategoryNum = songCategory
-                                this.songTitleNum = songsElem.dataset.songsTitle
-                                this.switchView(this.viewElems.search, this.viewElems.song)
-                            })
-                            this.viewElems.search.appendChild(songsElem)
-                        }
+                if (songTitle[0] !== undefined) {
+                    if ((songTitle[0].toLowerCase().indexOf(inputText.toLowerCase()) !== -1)) {
+                        const songsElem = this.createSongSelection(songTitle[0])
+                        songsElem.dataset.songsTitle = i
+                        songsElem.addEventListener('click', () => {
+                            this.songCategoryNum = songCategory
+                            this.songTitleNum = songsElem.dataset.songsTitle
+                            this.switchView(this.viewElems.search, this.viewElems.song)
+                        })
+                        this.viewElems.search.appendChild(songsElem)
                     }
-                    i++
-                })
+                }
+                i++
             })
-        }
+        })
+        
     }
 
     createSongsFile = () => {
