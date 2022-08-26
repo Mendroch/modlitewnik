@@ -33,6 +33,10 @@ h2 {
     display: block;
 }
 
+.h-display--flex {
+    display: flex;
+}
+
 .l-margin--small {
     margin-top: 57px;
 }
@@ -62,12 +66,13 @@ h2 {
 }
 
 .c-header__menu {
+    position: relative;
     display: flex;
     align-items: center;
     height: 56px;
 }
 
-.h-header__menu__icon {
+.h-header__menu__menu-icon {
     width: 42px;
 }
 
@@ -75,8 +80,14 @@ h2 {
     margin-left: 50px;
 }
 
+.h-header__menu__search-icon {
+    position: absolute;
+    right: 0;
+    margin-right: 7px;
+    width: 30px;
+}
+
 .c-header__search {
-    display: none;
     padding: 11px 0;
 }
 
@@ -93,15 +104,28 @@ h2 {
 }
 
 .c-header__search__input {
-    padding-right: 30px;
-    width: 72%;
+    padding-right: 30px 0 30px;
+    width: 57%;
     height: 56px;
     color: var(--main-text);
     background-color: var(--form);
     border: none;
     outline: none;
-    border-radius: 0 32px 32px 0;
     font-size: 15px;
+}
+
+.c-header__search__delete {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 56px;
+    width: 15%;
+    border-radius: 0 32px 32px 0;
+    background-color: var(--form);
+}
+
+.c-header__search__delete__icon {
+    width: 20px;
 }
 
 .is-header__menu__icon--small {

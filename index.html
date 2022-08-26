@@ -16,14 +16,18 @@
     <!-- Pasek menu -->
     <header id="mainHeader" class="c-header">
         <div class="c-header__menu container">
-            <img src="img/menu.png" id="mainHeaderIcon" class="h-header__menu__icon" alt="menu">
+            <img src="img/menu.png" id="headerMenuIcon" class="h-header__menu__menu-icon" alt="menu">
             <h1 id="mainHeaderText" class="h-header__menu__header">Ekran główny</h1>
+            <img src="img/search.png" id="headerSearchIcon" class="h-header__menu__search-icon h-display--none" alt="search">
         </div>
-        <div id="mainSearch" class="c-header__search">
+        <div id="mainSearch" class="c-header__search h-display--none">
             <div class="c-header__search__icon">
                 <img src="img/search2.png" alt="search">
             </div>
             <input type="text" id="searchInput" class="c-header__search__input" placeholder="Szukaj">
+            <div class="c-header__search__delete">
+                <img src="img/close.png" id="searchDelete" class="c-header__search__delete__icon h-display--none" alt="search delete">
+            </div>
         </div>
     </header>
 
@@ -54,7 +58,7 @@
     </main>
 
     <!-- Menu -->
-    <div id="menu" class="c-menu">
+    <div id="menu" class="c-menu h-display--none">
         <div id="menuHome" class="c-menu-elem">
             <img src="img/home.png" id="menuHome" class="c-menu-elem__img" alt="home">
             <p>Ekran główny</p>
@@ -75,8 +79,11 @@
         </div>
     </div>
 
+    <!-- Ekran wyszukiwania -->
+    <main id="search" class="h-display--none l-margin--large"></main>
+
     <!-- Ekran wyboru kategorii pieśni -->
-    <main id="songsCategories" class="h-display--none l-margin--large"></main>
+    <main id="songsCategories" class="h-display--none l-margin--small"></main>
 
     <!-- Ekran wyboru pieśni -->
     <main id="songsTitles" class="h-display--none l-margin--small"></main>
