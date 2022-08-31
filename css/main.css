@@ -49,6 +49,30 @@ h2 {
     margin-top: 136px;
 }
 
+.is-font-type--Inter {
+    font-family: 'Inter', sans-serif;
+}
+
+.is-font-type--ArchivoNarrow {
+    font-family: 'Archivo Narrow', sans-serif;
+}
+
+.is-font-type--Anaheim {
+    font-family: 'Anaheim', sans-serif;
+}
+
+.is-font-type--EBGaramond {
+    font-family: 'EB Garamond', sans-serif;
+}
+
+.is-font-type--PTSans {
+    font-family: 'PT Sans', sans-serif;
+}
+
+.is-font-type--Raleway {
+    font-family: 'Raleway', sans-serif;
+}
+
 .is-transition {
     transition-duration: .5s;
     transition-property: opacity;
@@ -268,6 +292,22 @@ h2 {
     background-color: var(--white);
 }
 
+.is-menu--close {
+    animation: menuClose .2s ease-in-out;
+}
+
+@keyframes menuOpen {
+    0% { left: -80vw; }
+    100% { left: 0 }
+}
+
+@keyframes menuClose {
+    0% { left: 0; }
+    100% { left: -80vw }
+}
+
+/* ---- shadow ---- */
+
 .is-shadow {
     display: none;
     position: fixed;
@@ -294,18 +334,84 @@ h2 {
     100% { opacity: 0%; }
 }
 
-.is-menu--close {
-    animation: menuClose .2s ease-in-out;
+/* ---- popUp ---- */
+
+.is-pop-up--open {
+    animation: popUpOpen .2s ease-in-out;
 }
 
-@keyframes menuOpen {
-    0% { left: -80vw; }
-    100% { left: 0 }
+.is-pop-up--close {
+    animation: popUpClose .2s ease-in-out;
 }
 
-@keyframes menuClose {
-    0% { left: 0; }
-    100% { left: -80vw }
+@keyframes popUpOpen {
+    0% { opacity: 0%; }
+    100% { opacity: 100%; }
+}
+
+@keyframes popUpClose {
+    0% { opacity: 100%; }
+    100% { opacity: 0%; }
+}
+
+/* ---- ustawienia ---- */
+
+.c-settings__elem {
+    padding: 0 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 60px;
+    background-color: var(--form);
+    border-bottom: 2px solid var(--white);
+}
+
+.c-settings__info-text {
+    color: var(--second-text);
+    font-size: 15px;
+}
+
+/* ---- ustawienia czcionki---- */
+
+.c-font {
+    margin-left: 2%;
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    padding: 25px;
+    z-index: 1;
+    background-color: var(--form);
+    border-radius: 16px;
+}
+
+.c-font__header {
+    font-size: 22px;
+    margin-bottom: 35px;
+}
+
+.l-font__form {
+    display: flex;
+    flex-direction: column;
+}
+
+.h-font__text {
+    margin-bottom: 30px;
+}
+
+.l-font__button {
+    display: flex;
+    justify-content: end;
+}
+
+.c-font__button {
+    height: 35px;
+    width: 60px;
+    outline: none;
+    border: none;
+    color: var(--white);
+    font-size: 15px;
+    background-color: var(--primary);
+    border-radius: 32px;
 }
 
 /* ---- kategorie pieśni ---- */
@@ -327,6 +433,5 @@ h2 {
 /* ---- pieśń ---- */
 
 .c-song {
-    margin: 66px 15px 15px 15px;
-    line-height: 28px;
+    margin: 68px 15px 15px 15px;
 }

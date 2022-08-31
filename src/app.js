@@ -1,53 +1,82 @@
 import { mapListToDOMElements, createDOMElem } from './dominteractions.js'
-import { getQuote, getSongs } from './getdata.js'
+import { getQuote, getSongs, getTextSettings, setTextSettings } from './getsetdata.js'
 
-class Prayer {
+class Prayo {
     constructor() {
         this.viewElems = {}
         this.songs = getSongs()
+        this.settings
         this.temporaryCategoryNum
         this.songCategoryNum
         this.songTitleNum
         this.backViewFromSearch
-        this.currentView
         this.isSearchOpened = false
         this.initializeApp()
+        this.currentView = this.viewElems.welcomePanel
+        this.currentPopUp
     }
 
     initializeApp = () => {
         this.connectDOMElements()
         this.setupListeners()
         this.setQuote()
+        this.setSettings()
         // this.createSongsFile()
+        // this.createQuoteFile()
     }
 
     connectDOMElements = () => {
         const listOfIds = Array.from(document.querySelectorAll('[id]')).map(elem => elem.id)
-        this.viewElems = mapListToDOMElements(listOfIds)
+        this.viewElems = mapListToDOMElements(listOfIds, 'id')
+        this.listOfRadioFontType = document.querySelectorAll("input[name='fontType']")
+        this.listOfRadioFontSize = document.querySelectorAll("input[name='fontSize']")
+        this.listOfRadioFontLineHeight = document.querySelectorAll("input[name='fontLineHeight']")
     }
 
     setupListeners = () => {
         this.viewElems.welcomePanel.addEventListener('click', () => { 
-            this.switchView(this.viewElems.welcomePanel, this.viewElems.homePanel)
+            this.switchView(this.viewElems.homePanel)
         })
         this.viewElems.headerMenuIcon.addEventListener('click', this.toggleMenu)
-        this.viewElems.shadow.addEventListener('click', this.toggleMenu)
+        this.viewElems.shadow.addEventListener('click', this.toggleShadowWith)
         this.viewElems.menuHome.addEventListener('click', () => {
-            this.switchView(this.viewElems.songsCategories, this.viewElems.homePanel)
+            this.switchView(this.viewElems.homePanel)
             this.toggleMenu()
         })
+        this.viewElems.menuSettings.addEventListener('click', () => {
+            this.switchView(this.viewElems.settings)
+            this.toggleMenu()
+        })
+        this.viewElems.settingsFontType.addEventListener('click', () => {
+            this.togglePopUp(this.viewElems.fontType, true)
+        })
+        this.viewElems.settingsFontSize.addEventListener('click', () => {
+            this.togglePopUp(this.viewElems.fontSize, true)
+        })
+        this.viewElems.settingsLineHeight.addEventListener('click', () => {
+            this.togglePopUp(this.viewElems.fontLineHeight, true)
+        })
+        this.viewElems.fontTypeBtn.addEventListener('click', () => {
+            this.changeFontSettings(this.listOfRadioFontType, 'fontType')
+        })
+        this.viewElems.fontSizeBtn.addEventListener('click', () => {
+            this.changeFontSettings(this.listOfRadioFontSize, 'fontSize')
+        })
+        this.viewElems.fontLineHeightBtn.addEventListener('click', () => {
+            this.changeFontSettings(this.listOfRadioFontLineHeight, 'fontLineHeight')
+        })
         this.viewElems.songsLink.addEventListener('click', () => {
-            this.switchView(this.viewElems.homePanel, this.viewElems.songsCategories)
+            this.switchView(this.viewElems.songsCategories)
         })
         this.viewElems.menuSongs.addEventListener('click', () => {
-            this.switchView(this.viewElems.homePanel, this.viewElems.songsCategories)
+            this.switchView(this.viewElems.songsCategories)
             this.toggleMenu()
         })
         this.viewElems.headerSearchIcon.addEventListener('click', () => {
-            if (this.currentView === 'categories') {
-                this.switchView(this.viewElems.songsCategories, this.viewElems.search)
-            } else if (this.currentView === 'titles') {
-                this.switchView(this.viewElems.songsTitles, this.viewElems.search)
+            if (this.currentView === this.viewElems.songsCategories) {
+                this.switchView(this.viewElems.search)
+            } else if (this.currentView === this.viewElems.songsTitles) {
+                this.switchView(this.viewElems.search)
             }
         })
         this.viewElems.searchInput.addEventListener('keyup', this.searchSong)
@@ -61,23 +90,66 @@ class Prayer {
     }
 
     schowHeader = () => {
-        this.viewElems.mainHeader.classList.remove('h-display--none') // ?
+        this.viewElems.mainHeader.classList.remove('h-display--none')
+    }
+
+    toggleShadowWith = () => {
+        if (this.currentPopUp === this.viewElems.menu) {
+            this.toggleMenu()
+        } else {
+            this.togglePopUp(this.currentPopUp)
+        }
     }
     
     toggleMenu = () => {
         if (this.viewElems.menu.style.display === 'block') {
             this.viewElems.menu.classList.add('is-menu--close')
-            this.viewElems.shadow.classList.add('is-shadow--close')
-            setTimeout(() => {
-                this.viewElems.menu.style.display = 'none'
-                this.viewElems.shadow.style.display = 'none'
-                this.viewElems.menu.classList.remove('is-menu--close')
-                this.viewElems.shadow.classList.remove('is-shadow--close')
-
-            }, 180)
+            this.toggleShadow()
+            return new Promise(() => {
+                setTimeout(() => {
+                    this.viewElems.menu.style.display = 'none'
+                    this.viewElems.menu.classList.remove('is-menu--close')
+                },180)
+            });
         } else {
+            this.toggleShadow(true)
             this.viewElems.menu.style.display = 'block'
+            this.currentPopUp = this.viewElems.menu
+        }
+    }
+
+    toggleShadow = (open = false) => {
+        if (!open) {
+            this.viewElems.shadow.classList.add('is-shadow--close')
+            return new Promise(() => {
+                setTimeout(() => {
+                    this.viewElems.shadow.style.display = 'none'
+                    this.viewElems.shadow.classList.remove('is-shadow--close')
+                    this.updateRadioInputs()
+                }, 180)
+            });
+            
+        } else {
             this.viewElems.shadow.style.display = 'block'
+        }
+    };
+
+    togglePopUp = (popUp, open = false) => {
+        this.currentPopUp = popUp
+        this.toggleShadow(open)
+
+        if (!open) {
+            popUp.classList.remove('is-pop-up--open')
+            popUp.classList.add('is-pop-up--close')
+            return new Promise(() => {
+                setTimeout(() => {
+                    popUp.classList.add('h-display--none')
+                    popUp.classList.remove('is-pop-up--close')
+                }, 100)
+            })
+        } else {
+            popUp.classList.add('is-pop-up--open')
+            popUp.classList.remove('h-display--none')
         }
     }
 
@@ -125,10 +197,10 @@ class Prayer {
         }
     }
 
-    switchView = (viewClose, viewOpen) => {
+    switchView = (viewOpen) => {
         this.fadeInOut()
         setTimeout(() => {
-            viewClose.classList.add('h-display--none')
+            this.currentView.classList.add('h-display--none')
 
             switch (viewOpen) {
                 case this.viewElems.songsCategories:
@@ -147,28 +219,32 @@ class Prayer {
                     this.editMainHeader(false, 'Szukaj', true, true)
                     this.switchSearch()
                 break
+                case this.viewElems.settings:
+                    this.editMainHeader(false, 'Ustawienia')
+                break
                 case this.viewElems.homePanel:
                     this.schowHeader()
                     this.editMainHeader()
                 break
             }
 
+            this.currentView = viewOpen
             viewOpen.classList.remove('h-display--none')
             this.fadeInOut()
         }, 100)
     }
 
     undoView = () => {
-        if (this.currentView === 'titles') {
-            this.switchView(this.viewElems.songsTitles, this.viewElems.songsCategories)
-        } else if (this.currentView === 'song' && !this.isSearchOpened) {
-            this.switchView(this.viewElems.song, this.viewElems.songsTitles)
-        } else if (this.currentView === 'search' && this.backViewFromSearch === 'categories') {
-            this.switchView(this.viewElems.search, this.viewElems.songsCategories)
-        } else if (this.currentView === 'search' && this.backViewFromSearch === 'titles') {
-            this.switchView(this.viewElems.search, this.viewElems.songsTitles)
-        } else if (this.currentView === 'song' && this.isSearchOpened) {
-            this.switchView(this.viewElems.song, this.viewElems.search)
+        if (this.currentView === this.viewElems.songsTitles) {
+            this.switchView(this.viewElems.songsCategories)
+        } else if (this.currentView === this.viewElems.song && !this.isSearchOpened) {
+            this.switchView(this.viewElems.songsTitles)
+        } else if (this.currentView === this.viewElems.search && this.backViewFromSearch === 'categories') {
+            this.switchView(this.viewElems.songsCategories)
+        } else if (this.currentView === this.viewElems.search && this.backViewFromSearch === 'titles') {
+            this.switchView(this.viewElems.songsTitles)
+        } else if (this.currentView === this.viewElems.song && this.isSearchOpened) {
+            this.switchView(this.viewElems.search)
         }
     }
 
@@ -193,7 +269,7 @@ class Prayer {
             songsElem.dataset.songsCategory = i
             songsElem.addEventListener('click', () => {
                 this.songCategoryNum = songsElem.dataset.songsCategory
-                this.switchView(this.viewElems.songsCategories, this.viewElems.songsTitles)
+                this.switchView(this.viewElems.songsTitles)
             })
             this.viewElems.songsCategories.appendChild(songsElem)
             i++
@@ -216,7 +292,7 @@ class Prayer {
             songsElem.dataset.songsTitle = i
             songsElem.addEventListener('click', () => {
                 this.songTitleNum = songsElem.dataset.songsTitle
-                this.switchView(this.viewElems.songsTitles, this.viewElems.song)
+                this.switchView(this.viewElems.song)
             })
             this.viewElems.songsTitles.appendChild(songsElem)
             i++
@@ -258,7 +334,6 @@ class Prayer {
             this.viewElems.searchDelete.classList.remove('h-display--none')
         }
 
-
         this.songs.forEach((_, songCategory) => {
             let i = 0
             this.songs[songCategory][1].forEach(songTitle => {
@@ -270,7 +345,7 @@ class Prayer {
                         songsElem.addEventListener('click', () => {
                             this.songCategoryNum = songCategory
                             this.songTitleNum = songsElem.dataset.songsTitle
-                            this.switchView(this.viewElems.search, this.viewElems.song)
+                            this.switchView(this.viewElems.song)
                         })
                         this.viewElems.search.appendChild(songsElem)
                     }
@@ -278,7 +353,63 @@ class Prayer {
                 i++
             })
         })
-        
+    }
+
+    updateRadioInputs = () => {
+        let list = [
+            this.listOfRadioFontType,
+            this.listOfRadioFontSize,
+            this.listOfRadioFontLineHeight
+        ]
+        list.forEach(element => {
+            for (const radio of element) {
+                if (radio.value === this.settings.fontFamily 
+                    || radio.value === this.settings.fontSize 
+                    || radio.value === this.settings.lineHeight) {
+                    radio.checked = true
+                    break
+                }
+            }
+        });
+    }
+
+    setSettings = () => {
+        this.settings = getTextSettings()
+        this.viewElems.settingsFontTypeText.innerText = this.settings.fontFamily
+        this.viewElems.settingsFontSizeText.innerText = this.settings.fontSize
+        let lineHeight = this.settings.lineHeight
+        if (lineHeight === '1') {
+            lineHeight = '80%'
+        } else if (lineHeight === '1.2') {
+            lineHeight = '100%'
+        } else {
+            lineHeight = '120%'
+        }
+        this.viewElems.settingsLineHeightText.innerText = lineHeight
+        this.updateRadioInputs()
+
+        this.viewElems.song.style.fontFamily = `'${this.settings.fontFamily}', sans-serif`
+        this.viewElems.song.style.fontSize = this.settings.fontSize
+        this.viewElems.song.style.lineHeight = this.settings.lineHeight
+    }
+
+    changeFontSettings = (list, view) => {
+        for (const radio of list) {
+            if (radio.checked) {
+                if (view === 'fontType') {
+                    setTextSettings(radio.value, this.settings.fontSize, this.settings.lineHeight)
+                    this.togglePopUp(this.viewElems.fontType)
+                } else if (view === 'fontSize') {
+                    setTextSettings(this.settings.fontFamily, radio.value, this.settings.lineHeight)
+                    this.togglePopUp(this.viewElems.fontSize)
+                } else {
+                    setTextSettings(this.settings.fontFamily, this.settings.fontSize, radio.value)
+                    this.togglePopUp(this.viewElems.fontLineHeight)
+                }
+                break
+            }
+        }
+        this.setSettings()
     }
 
     createSongsFile = () => {
@@ -512,6 +643,16 @@ class Prayer {
 
         localStorage.setItem('songs', JSON.stringify(songs));
     }
+
+    createQuoteFile = () => {
+        const quotes = [
+            ['Marność nad marnościami, powiada Kohelet, marność nad marnościami – wszystko marność.', 'Koh 1:2'],
+            ['Poznacie ich po ich owocach', 'Mt 7:16,20'],
+            ['Proście, a będzie wam dane; szukajcie, a znajdziecie; kołaczcie, a otworzą wam.', 'Mt 7:7']
+        ]
+
+        localStorage.setItem('quotes', JSON.stringify(quotes));
+    }
 }
 
-document.addEventListener('DOMContentLoaded', new Prayer())
+document.addEventListener('DOMContentLoaded', new Prayo())
