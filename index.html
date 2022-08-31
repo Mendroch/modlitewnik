@@ -18,7 +18,8 @@
         <div class="c-header__menu container">
             <img src="img/menu.png" id="headerMenuIcon" class="h-header__menu__menu-icon" alt="menu">
             <h1 id="mainHeaderText" class="h-header__menu__header">Ekran główny</h1>
-            <img src="img/search.png" id="headerSearchIcon" class="h-header__menu__search-icon h-display--none" alt="search">
+            <img src="img/search.png" id="headerSearchIcon" class="c-header__menu__icon h-display--none" alt="search">
+            <img src="img/font.png" id="headerFontIcon" class="h-header__menu__icon--big c-header__menu__icon h-display--none" alt="font settings">
         </div>
         <div id="mainSearch" class="c-header__search h-display--none">
             <div class="c-header__search__icon">
@@ -161,6 +162,33 @@
         </form>
     </div>
 
+    <!-- Okno wszystkich ustawień czcionki -->
+    <div id="fontAllSettings" class="c-font container h-display--none">
+        <p class="c-font-all__text">Czcionka</p>
+        <select id="fontTypeSelect" class="c-font-all__select">
+            <option class="test is-font-type--Inter" value="Inter">Inter</option>
+            <option class="test is-font-type--ArchivoNarrow" value="Archivo Narrow">Archivo Narrow</option>
+            <option class="test is-font-type--Anaheim" value="Anaheim">Anaheim</option>
+            <option class="test is-font-type--EBGaramond" value="EB Garamond">EB Garamond</option>
+            <option class="test is-font-type--PTSans" value="PT Sans">PT Sans</option>
+            <option class="test is-font-type--Raleway" value="Raleway">Raleway</option>
+        </select>
+        <p class="c-font-all__text">Rozmiar czcionki</p>
+        <select id="fontSizeSelect" class="c-font-all__select">
+            <option value="12px">12px</option>
+            <option value="15px">15px</option>
+            <option value="17px">17px</option>
+            <option value="20px">20px</option>
+            <option value="22px">22px</option>
+            <option value="25px">25px</option>
+        </select>
+        <p class="c-font-all__text">Interlinia</p>
+        <select id="fontLineHeightSelect" class="c-font-all__select">
+            <option value="1">80%</option>
+            <option value="1.2">100%</option>
+            <option value="1.4">120%</option>
+        </select>
+    </div>
 
     <!-- Ekran wyszukiwania -->
     <main id="search" class="h-display--none l-margin--large"></main>

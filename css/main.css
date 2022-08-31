@@ -73,6 +73,11 @@ h2 {
     font-family: 'Raleway', sans-serif;
 }
 
+.is-stop-scrolling {
+    height: 100%;
+    overflow: hidden;
+}
+
 .is-transition {
     transition-duration: .5s;
     transition-property: opacity;
@@ -103,11 +108,15 @@ h2 {
     margin-left: 50px;
 }
 
-.h-header__menu__search-icon {
+.c-header__menu__icon {
     position: absolute;
     right: 0;
     margin-right: 7px;
     width: 30px;
+}
+
+.h-header__menu__icon--big {
+    width: 40px;
 }
 
 .c-header__search {
@@ -371,7 +380,7 @@ h2 {
     font-size: 15px;
 }
 
-/* ---- ustawienia czcionki---- */
+/* ---- ustawienia czcionki ---- */
 
 .c-font {
     margin-left: 2%;
@@ -412,6 +421,33 @@ h2 {
     font-size: 15px;
     background-color: var(--primary);
     border-radius: 32px;
+}
+
+/* ---- wszystkie ustawienia czcionki pop up ---- */
+
+.c-font-all__text {
+    font-size: 14px;
+}
+
+.c-font-all__select {
+    margin: 10px 0 20px 0;
+    padding-left: 5px;
+    height: 40px;
+    width: 100%;
+    border: none;
+    outline: none;
+    border-bottom: 2px solid var(--main-text);
+    font-size: 20px;
+    color: var(--main-text);
+    background-color: var(--form);
+}
+
+.c-font-all__select:last-of-type {
+    margin: 10px 0 0 0;
+}
+
+.test {
+    user-select: none;
 }
 
 /* ---- kategorie pieśni ---- */
