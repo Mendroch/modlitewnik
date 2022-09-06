@@ -1,5 +1,6 @@
 import { mapListToDOMElements, createDOMElem } from './dominteractions.js'
 import { getQuote, getSongs, getTextSettings, setTextSettings, setLocalStorageFiles } from './getsetdata.js'
+import { getCategoriesRequest, getSongsRequest } from './requests.js'
 
 class Prayo {
     constructor() {
@@ -23,6 +24,11 @@ class Prayo {
         this.setQuote()
         this.setSettings()
         this.setSettingsTexts()
+        this.fetchAndDisplaySongs()  // <- funkcja testowa
+    }
+
+    fetchAndDisplaySongs = () => {
+        getSongsRequest().then(songs => console.log(songs))
     }
 
     connectDOMElements = () => {
