@@ -423,6 +423,70 @@ h2 {
     border-radius: 32px;
 }
 
+/* ---- customowy select dla ustawień czcionki ---- */
+
+/*the container must be positioned relative:*/
+.custom-select {
+    position: relative;
+  }
+  
+  .custom-select select {
+    display: none; /*hide original SELECT element:*/
+  }
+  
+  .select-selected {
+    background-color: var(--form);
+    border-bottom: 3px solid var(--main-text);
+  }
+  
+  /*style the arrow inside the select element:*/
+  .select-selected:after {
+    position: absolute;
+    content: "";
+    top: 14px;
+    right: 10px;
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+    border-color: var(--main-text) transparent transparent transparent;
+  }
+  
+  /*point the arrow upwards when the select box is open (active):*/
+  .select-selected.select-arrow-active:after {
+    border-color: transparent transparent #2E3E5C transparent;
+    top: 7px;
+  }
+  
+  /*style the items (options), including the selected item:*/
+  .select-items div,.select-selected {
+    color: #2E3E5C;
+    padding: 8px 16px;
+    user-select: none;
+  }
+  
+  .select-items div {
+    height: 50px;
+    line-height: 33px;
+    border-bottom: 2px solid var(--white);
+    background-color: var(--form);
+  }
+  
+  /*style items (options):*/
+  .select-items {
+    margin-top: 7px;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 99;
+    box-shadow: 0px 2px 13px -5px var(--main-text);
+  }
+  
+  /*hide the items when the select box is closed:*/
+  .select-hide {
+    display: none;
+  }
+
 /* ---- wszystkie ustawienia czcionki pop up ---- */
 
 .c-font-all__text {
@@ -431,15 +495,6 @@ h2 {
 
 .c-font-all__select {
     margin: 10px 0 20px 0;
-    padding-left: 5px;
-    height: 40px;
-    width: 100%;
-    border: none;
-    outline: none;
-    border-bottom: 2px solid var(--main-text);
-    font-size: 20px;
-    color: var(--main-text);
-    background-color: var(--form);
 }
 
 .c-font-all__select:last-of-type {
