@@ -23,6 +23,15 @@ h2 {
     font-weight: 700;
 }
 
+.dot {
+    background-color: red;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+
 /* ---- reużywalne komponenty ---- */
 
 .h-display--none {

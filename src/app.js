@@ -8,6 +8,7 @@ class Prayo {
         this.viewElems = {}
         this.songs = getSongs()
         this.settings
+        this.fontSizeStartGesture
         this.temporaryCategoryNum
         this.songCategoryNum
         this.songTitleNum
@@ -16,6 +17,7 @@ class Prayo {
         this.initializeApp()
         this.currentView = this.viewElems.welcomePanel
         this.currentPopUp
+        this.initialDistance
     }
 
     initializeApp = () => {
@@ -87,9 +89,24 @@ class Prayo {
         this.viewElems.fontLineHeightBtn.addEventListener('click', () => {
             this.changeFontSettings(this.listOfRadioFontLineHeight, 'fontLineHeight')
         })
-        // this.viewElems.fontTypeSelect.addEventListener('change', this.changeAllFontSettings)
-        // this.viewElems.fontSizeSelect.addEventListener('change', this.changeAllFontSettings)
-        // this.viewElems.fontLineHeightSelect.addEventListener('change', this.changeAllFontSettings)
+        this.viewElems.fontTypeSelect.addEventListener('change', this.changeAllFontSettings)
+        this.viewElems.fontSizeSelect.addEventListener('change', this.changeAllFontSettings)
+        this.viewElems.fontLineHeightSelect.addEventListener('change', this.changeAllFontSettings)
+
+
+        this.viewElems.song.addEventListener('touchmove', e => {
+            if (e.targetTouches.length === 2) {
+                let currentDistance = Math.round(Math.sqrt(Math.pow(e.changedTouches[0].pageX - e.changedTouches[1].pageX, 2)
+                + Math.pow(e.changedTouches[0].pageY - e.changedTouches[1].pageY, 2)))
+                this.changingFontSizeGesture(currentDistance)
+            }
+        })
+        this.viewElems.song.addEventListener('touchstart', e => {
+            if (e.targetTouches.length === 2) {
+                this.initialDistance = Math.round(Math.sqrt(Math.pow(e.changedTouches[0].pageX - e.changedTouches[1].pageX, 2)
+                 + Math.pow(e.changedTouches[0].pageY - e.changedTouches[1].pageY, 2)))
+            }
+        })
     }
 
     setQuote = () => {
@@ -535,6 +552,21 @@ class Prayo {
         /*if the user clicks anywhere outside the select box,
         then close all select boxes:*/
         document.addEventListener("click", closeAllSelect);
+    }
+
+
+    
+    changingFontSizeGesture = (currentDistance) => {
+        let fontSize = ['12px', '15px', '17px', '20px', '22px', '25px']
+        let newfontSize = Math.floor((currentDistance - this.initialDistance) / 50)
+        fontSize = fontSize[fontSize.indexOf(this.fontSizeStartGesture) + newfontSize]
+        
+        if (fontSize !== undefined && fontSize !== this.settings.fontSize) {
+            console.log(fontSize)
+            setTextSettings(this.settings.fontFamily, fontSize, this.settings.lineHeight)
+            this.setSettings()
+            this.setSettingsTexts()
+        }
     }
 }
 
