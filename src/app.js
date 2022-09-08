@@ -92,20 +92,14 @@ class Prayo {
         this.viewElems.fontTypeSelect.addEventListener('change', this.changeAllFontSettings)
         this.viewElems.fontSizeSelect.addEventListener('change', this.changeAllFontSettings)
         this.viewElems.fontLineHeightSelect.addEventListener('change', this.changeAllFontSettings)
-
-
-        this.viewElems.song.addEventListener('touchmove', e => {
-            if (e.targetTouches.length === 2) {
-                let currentDistance = Math.round(Math.sqrt(Math.pow(e.changedTouches[0].pageX - e.changedTouches[1].pageX, 2)
-                + Math.pow(e.changedTouches[0].pageY - e.changedTouches[1].pageY, 2)))
-                this.changingFontSizeGesture(currentDistance)
-            }
-        })
         this.viewElems.song.addEventListener('touchstart', e => {
-            if (e.targetTouches.length === 2) {
-                this.initialDistance = Math.round(Math.sqrt(Math.pow(e.changedTouches[0].pageX - e.changedTouches[1].pageX, 2)
-                 + Math.pow(e.changedTouches[0].pageY - e.changedTouches[1].pageY, 2)))
-            }
+            this.zoomTouchStart(e)
+        })
+        this.viewElems.song.addEventListener('touchmove', e => {
+            this.zoomTouchMove(e)
+        })
+        this.viewElems.song.addEventListener('touchend', () => {
+            this.zoomTouchEnd()
         })
     }
 
@@ -205,14 +199,14 @@ class Prayo {
         }
 
         if (arrow) {
-            this.viewElems.headerMenuIcon.src = '../img/left-arrow.png'
+            this.viewElems.headerMenuIcon.src = './img/left-arrow.png'
             this.viewElems.headerMenuIcon.removeEventListener('click', this.toggleMenu)
             this.viewElems.headerMenuIcon.addEventListener('click', this.undoView)
             this.viewElems.headerMenuIcon.classList.add('is-header__menu__icon--small')
         } else {
             this.viewElems.headerMenuIcon.removeEventListener('click', this.undoView)
             this.viewElems.headerMenuIcon.addEventListener('click', this.toggleMenu)
-            this.viewElems.headerMenuIcon.src = '../img/menu.png'
+            this.viewElems.headerMenuIcon.src = './img/menu.png'
             this.viewElems.headerMenuIcon.classList.remove('is-header__menu__icon--small')
         }
 
@@ -285,7 +279,7 @@ class Prayo {
     createSongSelection = (text) => {
         const songsElem = createDOMElem('div', 'c-songs-elem')
         const songsElemText = createDOMElem('p', null, text)
-        const songsElemImg = createDOMElem('img', 'h-songs-elem__img', null, '../img/right-arrow.png')
+        const songsElemImg = createDOMElem('img', 'h-songs-elem__img', null, './img/right-arrow.png')
         songsElem.appendChild(songsElemText)
         songsElem.appendChild(songsElemImg)
         return songsElem
@@ -554,19 +548,33 @@ class Prayo {
         document.addEventListener("click", closeAllSelect);
     }
 
-
-    
-    changingFontSizeGesture = (currentDistance) => {
-        let fontSize = ['12px', '15px', '17px', '20px', '22px', '25px']
-        let newfontSize = Math.floor((currentDistance - this.initialDistance) / 50)
-        fontSize = fontSize[fontSize.indexOf(this.fontSizeStartGesture) + newfontSize]
-        
-        if (fontSize !== undefined && fontSize !== this.settings.fontSize) {
-            console.log(fontSize)
-            setTextSettings(this.settings.fontFamily, fontSize, this.settings.lineHeight)
-            this.setSettings()
-            this.setSettingsTexts()
+    zoomTouchStart = (e) => {
+        if (e.targetTouches.length === 2) {
+            this.fontSizeStartGesture = this.settings.fontSize
+            this.initialDistance = Math.round(Math.sqrt(Math.pow(e.touches[0].pageX - e.touches[1].pageX, 2)
+            + Math.pow(e.touches[0].pageY - e.touches[1].pageY, 2)))
         }
+    }
+
+    zoomTouchMove = (e) => {
+        if (e.targetTouches.length === 2) {
+            e.preventDefault()
+            let currentDistance = Math.round(Math.sqrt(Math.pow(e.touches[0].pageX - e.touches[1].pageX, 2)
+            + Math.pow(e.touches[0].pageY - e.touches[1].pageY, 2)))
+
+            let fontSize = ['12px', '15px', '17px', '20px', '22px', '25px']
+            let newfontSize = Math.floor((currentDistance - this.initialDistance) / 40)
+            fontSize = fontSize[fontSize.indexOf(this.fontSizeStartGesture) + newfontSize]
+            if (fontSize !== undefined && fontSize !== this.settings.fontSize) {
+                setTextSettings(this.settings.fontFamily, fontSize, this.settings.lineHeight)
+                this.setSettings()
+                this.setSettingsTexts()
+            }
+        }
+    }
+
+    zoomTouchEnd = () => {
+        this.fontSizeStartGesture = this.settings.fontSize
     }
 }
 
