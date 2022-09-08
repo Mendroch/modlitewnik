@@ -18,6 +18,7 @@ class Prayo {
         this.currentView = this.viewElems.welcomePanel
         this.currentPopUp
         this.initialDistance
+        this.menuStartTouchPosition
     }
 
     initializeApp = () => {
@@ -52,16 +53,19 @@ class Prayo {
             this.switchView(this.viewElems.homePanel)
             this.toggleMenu()
         })
+        this.viewElems.menuSongs.addEventListener('click', () => {
+            this.switchView(this.viewElems.songsCategories)
+            this.toggleMenu()
+        })
         this.viewElems.menuSettings.addEventListener('click', () => {
             this.switchView(this.viewElems.settings)
             this.toggleMenu()
         })
+        this.viewElems.menu.addEventListener('touchstart', this.handleTouchStart, false)
+        this.viewElems.menu.addEventListener('touchmove', this.handleTouch, false)
+        this.viewElems.menu.addEventListener('touchend', this.handleTouchEnd, false)
         this.viewElems.songsLink.addEventListener('click', () => {
             this.switchView(this.viewElems.songsCategories)
-        })
-        this.viewElems.menuSongs.addEventListener('click', () => {
-            this.switchView(this.viewElems.songsCategories)
-            this.toggleMenu()
         })
         this.viewElems.headerSearchIcon.addEventListener('click', () => {
             this.switchView(this.viewElems.search)
@@ -98,8 +102,8 @@ class Prayo {
         this.viewElems.song.addEventListener('touchmove', e => {
             this.zoomTouchMove(e)
         })
-        this.viewElems.song.addEventListener('touchend', () => {
-            this.zoomTouchEnd()
+        this.viewElems.song.addEventListener('touchend', e => {
+            this.zoomTouchEnd(e)
         })
     }
 
@@ -125,12 +129,10 @@ class Prayo {
         if (this.viewElems.menu.style.display === 'block') {
             this.viewElems.menu.classList.add('is-menu--close')
             this.toggleShadow()
-            return new Promise(() => {
-                setTimeout(() => {
-                    this.viewElems.menu.style.display = 'none'
-                    this.viewElems.menu.classList.remove('is-menu--close')
-                },180)
-            })
+            setTimeout(() => {
+                this.viewElems.menu.style.display = 'none'
+                this.viewElems.menu.classList.remove('is-menu--close')
+            },200)
         } else {
             this.toggleShadow(true)
             this.viewElems.menu.style.display = 'block'
@@ -141,14 +143,11 @@ class Prayo {
     toggleShadow = (open = false) => {
         if (!open) {
             this.viewElems.shadow.classList.add('is-shadow--close')
-            return new Promise(() => {
-                setTimeout(() => {
-                    this.viewElems.shadow.style.display = 'none'
-                    this.viewElems.shadow.classList.remove('is-shadow--close')
-                    this.updateRadioInputs()
-                }, 180)
-            })
-            
+            setTimeout(() => {
+                this.viewElems.shadow.style.display = 'none'
+                this.viewElems.shadow.classList.remove('is-shadow--close')
+                this.updateRadioInputs()
+            }, 200)
         } else {
             this.viewElems.shadow.style.display = 'block'
         }
@@ -549,7 +548,7 @@ class Prayo {
     }
 
     zoomTouchStart = (e) => {
-        if (e.targetTouches.length === 2) {
+        if (e.targetTouches.length >= 2) {
             this.fontSizeStartGesture = this.settings.fontSize
             this.initialDistance = Math.round(Math.sqrt(Math.pow(e.touches[0].pageX - e.touches[1].pageX, 2)
             + Math.pow(e.touches[0].pageY - e.touches[1].pageY, 2)))
@@ -557,7 +556,7 @@ class Prayo {
     }
 
     zoomTouchMove = (e) => {
-        if (e.targetTouches.length === 2) {
+        if (e.targetTouches.length >= 2) {
             e.preventDefault()
             let currentDistance = Math.round(Math.sqrt(Math.pow(e.touches[0].pageX - e.touches[1].pageX, 2)
             + Math.pow(e.touches[0].pageY - e.touches[1].pageY, 2)))
@@ -573,8 +572,32 @@ class Prayo {
         }
     }
 
-    zoomTouchEnd = () => {
-        this.fontSizeStartGesture = this.settings.fontSize
+    zoomTouchEnd = (e) => {
+        if (e.targetTouches.length >= 2) {
+            this.fontSizeStartGesture = this.settings.fontSize
+        }
+    }
+
+    touchCloseMenu = () => {
+        this.toggleShadow()
+        this.viewElems.menu.style.display = 'none'
+    }
+
+    handleTouchStart = (e) => {
+        this.menuStartTouchPosition = e.changedTouches[0].clientX;
+    }
+
+    handleTouch = (e) => {
+        let x = e.changedTouches[0].clientX;
+        let position = -this.menuStartTouchPosition + x;
+        if ( position < 0 ) this.viewElems.menu.style.transform = `translateX(${-(this.menuStartTouchPosition - x) + 'px'})`
+    }
+
+    handleTouchEnd = (e) => {
+        let x = e.changedTouches[0].clientX;
+        let total = this.viewElems.menu.clientWidth;
+        this.viewElems.menu.style.transform = `translateX(0)`;
+        if ( this.menuStartTouchPosition - x > total*.5 ) this.touchCloseMenu();
     }
 }
 

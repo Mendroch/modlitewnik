@@ -310,13 +310,13 @@ h2 {
 }
 
 @keyframes menuOpen {
-    0% { left: -80vw; }
-    100% { left: 0 }
+    0% { transform: translateX(-80vw) }
+    100% { transform: translateX(0) }
 }
 
 @keyframes menuClose {
-    0% { left: 0; }
-    100% { left: -80vw }
+    0% { transform: translateX(0) }
+    100% { transform: translateX(-80vw) }
 }
 
 /* ---- shadow ---- */
@@ -328,8 +328,7 @@ h2 {
     z-index: 1;
     width: 100vw;
     height: 100vh;
-    background-color: black;
-    opacity: 60%;
+    background-color: rgba(0, 0, 0, .6);
     animation: shadowOpen .2s ease-in-out;
 }
 
@@ -339,11 +338,11 @@ h2 {
 
 @keyframes shadowOpen {
     0% { opacity: 0%; }
-    100% { opacity: 60%; }
+    100% { opacity: 100%; }
 }
 
 @keyframes shadowClose {
-    0% { opacity: 60%; }
+    0% { opacity: 100%; }
     100% { opacity: 0%; }
 }
 
