@@ -6,10 +6,10 @@ export const mapListToDOMElements = (listOfValues, attribute) => {
     const _viewElems = {}
 
     for (const value of listOfValues) {
-        _viewElems[value] = _getDOMElem(attribute, value);
+        _viewElems[value] = _getDOMElem(attribute, value)
     }
 
-    return _viewElems;
+    return _viewElems
 }
 
 export const createDOMElem = (tagName, className, innerText, src) => {

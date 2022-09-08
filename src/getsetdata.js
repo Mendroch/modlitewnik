@@ -22,7 +22,7 @@ export const getTextSettings = () => {
             fontSize: '17px',
             lineHeight: '1.2'
         }
-        localStorage.setItem('settings', JSON.stringify(settings));
+        localStorage.setItem('settings', JSON.stringify(settings))
         return settings
     }
 }
@@ -33,7 +33,7 @@ export const setTextSettings = (fontFamily, fontSize, lineHeight) => {
         fontSize: fontSize,
         lineHeight: lineHeight
     }
-    localStorage.setItem('settings', JSON.stringify(settings));
+    localStorage.setItem('settings', JSON.stringify(settings))
 }
 
 export const setLocalStorageFiles = () => {
@@ -275,7 +275,7 @@ const createSongsFile = () => {
 
 
 
-    localStorage.setItem('songs', JSON.stringify(songs));
+    localStorage.setItem('songs', JSON.stringify(songs))
 }
 
 const createQuoteFile = () => {
@@ -285,5 +285,5 @@ const createQuoteFile = () => {
         ['Proście, a będzie wam dane; szukajcie, a znajdziecie; kołaczcie, a otworzą wam.', 'Mt 7:7']
     ]
 
-    localStorage.setItem('quotes', JSON.stringify(quotes));
+    localStorage.setItem('quotes', JSON.stringify(quotes))
 }
