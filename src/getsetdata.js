@@ -7,10 +7,16 @@ export const getQuote = () => {
     }
 }
 
+export const getCategories = () => {
+    if (localStorage.getItem('categories')) {
+        return JSON.parse(localStorage.getItem('categories'))
+    }
+}
+
 export const getSongs = () => {
-    if (localStorage.getItem('songs2')) {
-        return JSON.parse(localStorage.getItem('songs2'))
-    } else { alert('Błąd wczytywania songs') } // <- usunąć w oficjalnej wersji
+    if (localStorage.getItem('songs')) {
+        return JSON.parse(localStorage.getItem('songs'))
+    }
 }
 
 export const getTextSettings = () => {

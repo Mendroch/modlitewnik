@@ -1,17 +1,16 @@
 import { mapListToDOMElements, createDOMElem } from './dominteractions.js'
-import { getQuote, getSongs, getTextSettings, setTextSettings, setLocalStorageFiles } from './getsetdata.js'
+import { getQuote, getSongs, getCategories, getTextSettings, setTextSettings, setLocalStorageFiles } from './getsetdata.js'
 import { updateContent } from './updatecontent.js'
 
 class Prayo {
     constructor() {
         setLocalStorageFiles()
         this.viewElems = {}
-        this.songs = getSongs()
         this.settings
         this.fontSizeStartGesture
         this.temporaryCategoryNum
         this.songCategoryNum
-        this.songTitleNum
+        this.songTitle
         this.backViewFromSearch
         this.isSearchOpened = false
         this.initializeApp()
@@ -23,20 +22,18 @@ class Prayo {
 
     initializeApp = () => {
         updateContent()
+        this.getCategoriesAndSongs()
         this.connectDOMElements()
         this.setupListeners()
         this.setQuote()
         this.setSettings()
         this.setSettingsTexts()
         this.createCustomSelect()
-        // this.fetchAndDisplaySongs()  // <- funkcja testowa
     }
 
-    fetchAndDisplaySongs = () => {
-        getCategoriesRequest().then(categories => console.log(categories))
-        getSongsRequest().then(songs => console.log(songs))
-        getCategoriesUpdateRequest().then(songs => console.log(songs))
-        getSongsUpdateRequest().then(songs => console.log(songs))
+    getCategoriesAndSongs = () => {
+        this.categories = getCategories()
+        this.songs = getSongs()
     }
 
     connectDOMElements = () => {
@@ -241,7 +238,7 @@ class Prayo {
                     this.switchSongsTitles()
                 break
                 case this.viewElems.song:
-                    this.editMainHeader(false, this.songs[this.songCategoryNum][1][this.songTitleNum][0], false, true, true, true)
+                    this.editMainHeader(false, this.songTitle, false, true, true, true)
                     this.switchSong()
                 break
                 case this.viewElems.search:
@@ -292,16 +289,13 @@ class Prayo {
         this.backViewFromSearch = 'categories'
         this.isSearchOpened = false
 
-        let i = 0
-        this.songs.forEach(songCategory => {
-            const songsElem = this.createSongSelection(songCategory[0])
-            songsElem.dataset.songsCategory = i
+        this.categories.forEach(category => {
+            const songsElem = this.createSongSelection(category.name)
             songsElem.addEventListener('click', () => {
-                this.songCategoryNum = songsElem.dataset.songsCategory
+                this.songCategoryNum = category.id
                 this.switchView(this.viewElems.songsTitles)
             })
             this.viewElems.songsCategories.appendChild(songsElem)
-            i++
         })
     }
 
@@ -315,24 +309,28 @@ class Prayo {
         this.isSearchOpened = false
         this.temporaryCategoryNum = this.songCategoryNum
    
-        let i = 0
-        this.songs[this.songCategoryNum][1].forEach(songTitle => {
-            const songsElem = this.createSongSelection(songTitle[0])
-            songsElem.dataset.songsTitle = i
-            songsElem.addEventListener('click', () => {
-                this.songTitleNum = songsElem.dataset.songsTitle
-                this.switchView(this.viewElems.song)
-            })
-            this.viewElems.songsTitles.appendChild(songsElem)
-            i++
+        this.songs.forEach(song => {
+            if (this.songCategoryNum === song.category_id) {
+                const songsElem = this.createSongSelection(song.name)
+                songsElem.addEventListener('click', () => {
+                    this.songTitle = song.name
+                    this.switchView(this.viewElems.song)
+                })
+                this.viewElems.songsTitles.appendChild(songsElem)
+            }
         })
     }
 
     switchSong = () => {
         this.viewElems.song.innerHTML = ''
         this.currentView = 'song'
-        const text = createDOMElem('p', 'c-song', this.songs[this.songCategoryNum][1][this.songTitleNum][1])
-        this.viewElems.song.appendChild(text)
+        this.songs.forEach(song => {
+            if (this.songTitle === song.name) {
+                const text = createDOMElem('p', 'c-song', null, null, song.content)
+                this.viewElems.song.appendChild(text)
+                return
+            }
+        })
     }
 
     switchSearch = () => {
@@ -363,24 +361,15 @@ class Prayo {
             this.viewElems.searchDelete.classList.remove('h-display--none')
         }
 
-        this.songs.forEach((_, songCategory) => {
-            let i = 0
-            this.songs[songCategory][1].forEach(songTitle => {
-    
-                if (songTitle[0] !== undefined) {
-                    if ((songTitle[0].toLowerCase().indexOf(inputText.toLowerCase()) !== -1)) {
-                        const songsElem = this.createSongSelection(songTitle[0])
-                        songsElem.dataset.songsTitle = i
-                        songsElem.addEventListener('click', () => {
-                            this.songCategoryNum = songCategory
-                            this.songTitleNum = songsElem.dataset.songsTitle
-                            this.switchView(this.viewElems.song)
-                        })
-                        this.viewElems.search.appendChild(songsElem)
-                    }
-                }
-                i++
-            })
+        this.songs.forEach(song => {
+            if (song.name.toLowerCase().indexOf(inputText.toLowerCase()) !== -1) {
+                const songsElem = this.createSongSelection(song.name)
+                songsElem.addEventListener('click', () => {
+                    this.songTitle = song.name
+                    this.switchView(this.viewElems.song)
+                })
+                this.viewElems.search.appendChild(songsElem)
+            }
         })
     }
 

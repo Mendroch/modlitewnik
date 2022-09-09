@@ -11,9 +11,8 @@ export const updateContent = () => {
                 localStorage.setItem("categories",JSON.stringify(response))
             })
             .catch((reason) => console.log(reason));
-            localStorage.setItem("categoriesLastUpdate",JSON.stringify(response.lastUpdate)
-        );
-      }
+            localStorage.setItem("categoriesLastUpdate",JSON.stringify(response.lastUpdate))
+        }
     }).catch((reason) => console.log(reason));
 
     getSongsUpdateRequest.then((response) => {
@@ -22,8 +21,7 @@ export const updateContent = () => {
                 localStorage.setItem("songs",JSON.stringify(response))
             })
             .catch((reason) => console.log(reason));
-            localStorage.setItem("songsLastUpdate",JSON.stringify(response.lastUpdate)
-        );
-      }
+            localStorage.setItem("songsLastUpdate",JSON.stringify(response.lastUpdate));
+        }
     }).catch((reason) => console.log(reason));
 };
