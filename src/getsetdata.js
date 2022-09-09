@@ -8,8 +8,8 @@ export const getQuote = () => {
 }
 
 export const getSongs = () => {
-    if (localStorage.getItem('songs')) {
-        return JSON.parse(localStorage.getItem('songs'))
+    if (localStorage.getItem('songs2')) {
+        return JSON.parse(localStorage.getItem('songs2'))
     } else { alert('Błąd wczytywania songs') } // <- usunąć w oficjalnej wersji
 }
 
@@ -37,12 +37,28 @@ export const setTextSettings = (fontFamily, fontSize, lineHeight) => {
 }
 
 export const setLocalStorageFiles = () => {
-    if (!localStorage.getItem('songs')) {
+    if (!localStorage.getItem('songs2')) {
         createSongsFile()
     }
 
     if (!localStorage.getItem('quotes')) {
         createQuoteFile()
+    }
+}
+
+export const getCategoriesLastUpdateLS = () => {
+    if (localStorage.getItem('categoriesLastUpdate')) {
+        return JSON.parse(localStorage.getItem('categoriesLastUpdate'))
+    } else { 
+        return undefined
+    }
+}
+
+export const getSongsLastUpdateLS = () => {
+    if (localStorage.getItem('songsLastUpdate')) {
+        return JSON.parse(localStorage.getItem('songsLastUpdate'))
+    } else { 
+        return undefined
     }
 }
 
@@ -275,7 +291,7 @@ const createSongsFile = () => {
 
 
 
-    localStorage.setItem('songs', JSON.stringify(songs))
+    localStorage.setItem('songs2', JSON.stringify(songs))
 }
 
 const createQuoteFile = () => {

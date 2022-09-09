@@ -1,6 +1,6 @@
 import { mapListToDOMElements, createDOMElem } from './dominteractions.js'
 import { getQuote, getSongs, getTextSettings, setTextSettings, setLocalStorageFiles } from './getsetdata.js'
-import { getCategoriesRequest, getSongsRequest } from './requests.js'
+import { updateContent } from './updatecontent.js'
 
 class Prayo {
     constructor() {
@@ -22,6 +22,7 @@ class Prayo {
     }
 
     initializeApp = () => {
+        updateContent()
         this.connectDOMElements()
         this.setupListeners()
         this.setQuote()
@@ -32,7 +33,10 @@ class Prayo {
     }
 
     fetchAndDisplaySongs = () => {
+        getCategoriesRequest().then(categories => console.log(categories))
         getSongsRequest().then(songs => console.log(songs))
+        getCategoriesUpdateRequest().then(songs => console.log(songs))
+        getSongsUpdateRequest().then(songs => console.log(songs))
     }
 
     connectDOMElements = () => {
