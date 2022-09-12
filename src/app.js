@@ -1,6 +1,6 @@
 import { mapListToDOMElements, createDOMElem } from './dominteractions.js'
 import { getQuote, getSongs, getCategories, getTextSettings, setTextSettings, setLocalStorageFiles } from './getsetdata.js'
-import { updateContent } from './updatecontent.js'
+import { getLocalStorageData, getCategoriesUpdate, getSongsUpdate } from './updatecontent.js'
 
 class Prayo {
     constructor() {
@@ -21,14 +21,25 @@ class Prayo {
     }
 
     initializeApp = () => {
-        updateContent()
-        this.getCategoriesAndSongs()
+        // updateContent()
+        // this.getCategoriesAndSongs()
+        this.initializeData()
         this.connectDOMElements()
         this.setupListeners()
         this.setQuote()
         this.setSettings()
         this.setSettingsTexts()
         this.createCustomSelect()
+    }
+
+    initializeData = () => {
+        getLocalStorageData()
+            .then(getCategoriesUpdate)
+            .then(getSongsUpdate)
+            .then(this.getCategoriesAndSongs)
+            .catch(err => {
+                console.log(err)
+            })
     }
 
     getCategoriesAndSongs = () => {
