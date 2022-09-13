@@ -169,8 +169,19 @@ h2 {
 }
 
 .is-header__menu__header--small {
-    margin-left: 35px;
+    margin-left: 20px;
     font-size: 17px;
+    height: 19px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.c-header__menu__gradient {
+    position: absolute;
+    left: calc(100vw - 120px);
+    background: linear-gradient(90deg, rgba(31,204,121,0) 0%, rgba(31,204,121,1) 50%);
+    height: 25px;
+    width: 80px;
 }
 
 /* ---- ekran powitalny ---- */
@@ -509,16 +520,32 @@ h2 {
 /* ---- kategorie pieśni ---- */
 
 .c-songs-elem {
-    padding: 0 15px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     height: 60px;
     background-color: var(--form);
     border-bottom: 2px solid var(--white);
 }
 
-.h-songs-elem__img {
+.c-songs-elem__text {
+    position: absolute;
+    left: 15px;
+    height: 19px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.c-songs-elem__gradient {
+    position: absolute;
+    left: calc(100vw - 90px);
+    background: linear-gradient(90deg, rgba(244,245,247,0) 0%, rgba(244,245,247,1) 40%);
+    height: 25px;
+    width: 90px;
+}
+
+.c-songs-elem__img {
+    position: absolute;
+    right: 15px;
     width: 30px;
 }
 

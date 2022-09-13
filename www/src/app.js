@@ -221,8 +221,10 @@ class Prayo {
 
         if (smallText) {
             this.viewElems.mainHeaderText.classList.add('is-header__menu__header--small')
+            this.viewElems.headerMenuGradient.classList.remove('h-display--none')
         } else {
             this.viewElems.mainHeaderText.classList.remove('is-header__menu__header--small')
+            this.viewElems.headerMenuGradient.classList.add('h-display--none')
         }
     }
 
@@ -287,9 +289,11 @@ class Prayo {
 
     createSongSelection = (text) => {
         const songsElem = createDOMElem('div', 'c-songs-elem')
-        const songsElemText = createDOMElem('p', null, text)
-        const songsElemImg = createDOMElem('img', 'h-songs-elem__img', null, './img/right-arrow.png')
+        const songsElemText = createDOMElem('p', 'c-songs-elem__text', text)
+        const songsElemGradient = createDOMElem('div', 'c-songs-elem__gradient')
+        const songsElemImg = createDOMElem('img', 'c-songs-elem__img', null, './img/right-arrow.png')
         songsElem.appendChild(songsElemText)
+        songsElem.appendChild(songsElemGradient)
         songsElem.appendChild(songsElemImg)
         return songsElem
     }
@@ -578,8 +582,10 @@ class Prayo {
             fontSize = fontSize[fontSize.indexOf(this.fontSizeStartGesture) + newfontSize]
             if (fontSize !== undefined && fontSize !== this.settings.fontSize) {
                 setTextSettings(this.settings.fontFamily, fontSize, this.settings.lineHeight)
+                this.deleteCustomSelect()
                 this.setSettings()
                 this.setSettingsTexts()
+                this.createCustomSelect()
             }
         }
     }
