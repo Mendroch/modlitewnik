@@ -38,7 +38,7 @@ class Prayo {
             .then(getSongsUpdate)
             .then(this.getCategoriesAndSongs)
             .catch(err => {
-                console.log(err)
+                alert(err)
             })
     }
 
@@ -560,6 +560,7 @@ class Prayo {
 
     zoomTouchStart = (e) => {
         if (e.targetTouches.length >= 2) {
+            e.preventDefault()
             this.fontSizeStartGesture = this.settings.fontSize
             this.initialDistance = Math.round(Math.sqrt(Math.pow(e.touches[0].pageX - e.touches[1].pageX, 2)
             + Math.pow(e.touches[0].pageY - e.touches[1].pageY, 2)))

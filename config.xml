@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="io.cordova.hellocordova" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Prayo</name>
+    <description>Aplikacja z pieśniami religijnymi</description>
+    <author email="dev@cordova.apache.org" href="https://cordova.apache.org">
+        Krzysztof Mendroch
+    </author>
+    <content src="index.html" />
+
+    <!-- Dostęp do API aplikacji -->
+    <access origin="http://kmendroch.lk.pl/api/categories/last-update" />
+    <access origin="http://kmendroch.lk.pl/api/songs/last-update" />
+    <access origin="http://kmendroch.lk.pl/api/categories" />
+    <access origin="http://kmendroch.lk.pl/api/songs" />
+
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <preference name="loadUrlTimeoutValue" value="700000" />
+</widget>

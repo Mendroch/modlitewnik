@@ -20,11 +20,11 @@ export const getCategoriesUpdate = () => {
                 getCategoriesRequest.then((response) => {
                     localStorage.setItem("categories",JSON.stringify(response))
                     resolve()
-                })
+                }).catch((reject) => alert(reject))
             } else {
                 resolve()
             }
-        })
+        }).catch((reject) => alert(reject))
     })
 }
 
@@ -36,10 +36,10 @@ export const getSongsUpdate = () => {
                 getSongsRequest.then((response) => {
                     localStorage.setItem("songs",JSON.stringify(response))
                     resolve()
-                })
+                }).catch((reject) => alert(reject))
             } else {
                 resolve()
             }
-        })
+        }).catch((reject) => alert(reject))
     })
 }
