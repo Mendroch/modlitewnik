@@ -18,6 +18,10 @@ export const getCategoriesUpdate = () => {
             if (response.lastUpdate != categoriesLastUpdateLS) {
                 localStorage.setItem("categoriesLastUpdate",JSON.stringify(response.lastUpdate))
                 getCategoriesRequest.then((response) => {
+                    function sortStr (a, b) {
+                        return a.name.localeCompare(b.name);
+                    }
+                    response.sort(sortStr);
                     localStorage.setItem("categories",JSON.stringify(response))
                     resolve()
                 }).catch((reject) => alert(reject))
@@ -34,6 +38,10 @@ export const getSongsUpdate = () => {
             if (response.lastUpdate != songsLastUpdateLS) {
                 localStorage.setItem("songsLastUpdate",JSON.stringify(response.lastUpdate));
                 getSongsRequest.then((response) => {
+                    function sortStr (a, b) {
+                        return a.name.localeCompare(b.name);
+                    }
+                    response.sort(sortStr);
                     localStorage.setItem("songs",JSON.stringify(response))
                     resolve()
                 }).catch((reject) => alert(reject))
