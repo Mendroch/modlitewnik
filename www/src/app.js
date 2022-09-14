@@ -1,10 +1,10 @@
 import { mapListToDOMElements, createDOMElem } from './dominteractions.js'
-import { getQuote, getSongs, getCategories, getTextSettings, setTextSettings, setLocalStorageFiles } from './getsetdata.js'
+import { getSongs, getCategories, getTextSettings, setTextSettings, getCategoriesLastUpdateLS } from './getsetdata.js'
 import { getLocalStorageData, getCategoriesUpdate, getSongsUpdate } from './updatecontent.js'
+import { getSongsUpdateRequest } from './requests.js'
 
 class Prayo {
     constructor() {
-        setLocalStorageFiles()
         this.viewElems = {}
         this.settings
         this.fontSizeStartGesture
@@ -14,32 +14,37 @@ class Prayo {
         this.backViewFromSearch
         this.isSearchOpened = false
         this.initializeApp()
-        this.currentView = this.viewElems.welcomePanel
+        this.currentView = this.viewElems.homePanel
         this.currentPopUp
         this.initialDistance
         this.menuStartTouchPosition
     }
 
     initializeApp = () => {
-        // updateContent()
-        // this.getCategoriesAndSongs()
-        this.initializeData()
         this.connectDOMElements()
         this.setupListeners()
-        this.setQuote()
+        this.initializeData()
         this.setSettings()
         this.setSettingsTexts()
         this.createCustomSelect()
     }
 
     initializeData = () => {
+        getSongsUpdateRequest.then(() => {
+            this.updateData()
+        }).catch(() =>  {
+            this.getCategoriesAndSongs()
+        })
+    }
+
+    updateData = () => {
         getLocalStorageData()
-            .then(getCategoriesUpdate)
-            .then(getSongsUpdate)
-            .then(this.getCategoriesAndSongs)
-            .catch(err => {
-                alert(err)
-            })
+        .then(getCategoriesUpdate)
+        .then(getSongsUpdate)
+        .then(this.getCategoriesAndSongs)
+        .catch(err => {
+            alert(err)
+        })
     }
 
     getCategoriesAndSongs = () => {
@@ -56,9 +61,6 @@ class Prayo {
     }
 
     setupListeners = () => {
-        this.viewElems.welcomePanel.addEventListener('click', () => { 
-            this.switchView(this.viewElems.homePanel)
-        })
         this.viewElems.headerMenuIcon.addEventListener('click', this.toggleMenu)
         this.viewElems.shadow.addEventListener('click', this.toggleShadowWith)
         this.viewElems.menuHome.addEventListener('click', () => {
@@ -125,10 +127,6 @@ class Prayo {
         this.viewElems.welcomeQuoteAuthor.innerText = quote[1]
     }
 
-    schowHeader = () => {
-        this.viewElems.mainHeader.classList.remove('h-display--none')
-    }
-
     toggleShadowWith = () => {
         if (this.currentPopUp === this.viewElems.menu) {
             this.toggleMenu()
@@ -184,7 +182,7 @@ class Prayo {
         }
     }
 
-    editMainHeader = (searchIcon = false, text = 'Ekran główny', searchInput = false, arrow = false, smallText = false, fontSettings = false) => {
+    editMainHeader = (searchIcon = false, text = 'Śpiewnik', searchInput = false, arrow = false, smallText = false, fontSettings = false) => {
         if (searchIcon) {
             this.viewElems.headerSearchIcon.classList.remove('h-display--none')
         } else {
@@ -243,7 +241,7 @@ class Prayo {
 
             switch (viewOpen) {
                 case this.viewElems.songsCategories:
-                    this.editMainHeader(true, 'Pieśni')
+                    this.editMainHeader(true, 'Kategorie')
                     this.switchSongsCategories()
                 break
                 case this.viewElems.songsTitles:
@@ -262,7 +260,6 @@ class Prayo {
                     this.editMainHeader(false, 'Ustawienia')
                 break
                 case this.viewElems.homePanel:
-                    this.schowHeader()
                     this.editMainHeader()
                 break
             }
@@ -563,7 +560,8 @@ class Prayo {
     }
 
     zoomTouchStart = (e) => {
-        if (e.targetTouches.length >= 2) {
+        if (e.targetTouches.length === 2) {
+            this.viewElems.song.classList.add('is-stop-scrolling')
             e.preventDefault()
             this.fontSizeStartGesture = this.settings.fontSize
             this.initialDistance = Math.round(Math.sqrt(Math.pow(e.touches[0].pageX - e.touches[1].pageX, 2)
@@ -572,27 +570,29 @@ class Prayo {
     }
 
     zoomTouchMove = (e) => {
-        if (e.targetTouches.length >= 2) {
+        if (e.targetTouches.length === 2) {
+            this.viewElems.song.classList.add('is-stop-scrolling')
             e.preventDefault()
             let currentDistance = Math.round(Math.sqrt(Math.pow(e.touches[0].pageX - e.touches[1].pageX, 2)
             + Math.pow(e.touches[0].pageY - e.touches[1].pageY, 2)))
 
-            let fontSize = ['12px', '15px', '17px', '20px', '22px', '25px']
+            let fontsSize = ['12px', '15px', '17px', '20px', '22px', '25px']
             let newfontSize = Math.floor((currentDistance - this.initialDistance) / 40)
-            fontSize = fontSize[fontSize.indexOf(this.fontSizeStartGesture) + newfontSize]
+            let fontSize = fontsSize[fontsSize.indexOf(this.fontSizeStartGesture) + newfontSize]
             if (fontSize !== undefined && fontSize !== this.settings.fontSize) {
                 setTextSettings(this.settings.fontFamily, fontSize, this.settings.lineHeight)
-                this.deleteCustomSelect()
                 this.setSettings()
-                this.setSettingsTexts()
-                this.createCustomSelect()
             }
         }
     }
 
     zoomTouchEnd = (e) => {
-        if (e.targetTouches.length >= 2) {
+        if (e.touches.length === 1) {
+            this.viewElems.song.classList.remove('is-stop-scrolling')
             this.fontSizeStartGesture = this.settings.fontSize
+            this.deleteCustomSelect()
+            this.setSettingsTexts()
+            this.createCustomSelect()
         }
     }
 

@@ -1,12 +1,3 @@
-export const getQuote = () => {
-    if (localStorage.getItem('quotes')) {
-        let quotes = JSON.parse(localStorage.getItem('quotes'))
-        return quotes[Math.floor(Math.random()*quotes.length)]
-    } else {
-        return ['Błąd wczytywania cytatu z Local Storage', 'Krzysztof M']
-    }
-}
-
 export const getCategories = () => {
     if (localStorage.getItem('categories')) {
         return JSON.parse(localStorage.getItem('categories'))
@@ -42,12 +33,6 @@ export const setTextSettings = (fontFamily, fontSize, lineHeight) => {
     localStorage.setItem('settings', JSON.stringify(settings))
 }
 
-export const setLocalStorageFiles = () => {
-    if (!localStorage.getItem('quotes')) {
-        createQuoteFile()
-    }
-}
-
 export const getCategoriesLastUpdateLS = () => {
     if (localStorage.getItem('categoriesLastUpdate')) {
         return JSON.parse(localStorage.getItem('categoriesLastUpdate'))
@@ -62,14 +47,4 @@ export const getSongsLastUpdateLS = () => {
     } else { 
         return undefined
     }
-}
-
-const createQuoteFile = () => {
-    const quotes = [
-        ['Marność nad marnościami, powiada Kohelet, marność nad marnościami – wszystko marność.', 'Koh 1:2'],
-        ['Poznacie ich po ich owocach', 'Mt 7:16,20'],
-        ['Proście, a będzie wam dane; szukajcie, a znajdziecie; kołaczcie, a otworzą wam.', 'Mt 7:7']
-    ]
-
-    localStorage.setItem('quotes', JSON.stringify(quotes))
 }

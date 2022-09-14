@@ -13,11 +13,21 @@
 <body id="body" class="is-transition">
     <div id="shadow" class="is-shadow"></div>
 
+    <!-- Informacja o połączeniu z internetem -->
+    <div id="networkInformation" class="h-display--none">
+        <div class="c-network-information">
+            <img src="img/information.png" class="c-network-information__img" alt="info">
+            <p class="c-network-information__text">
+                Nawiąż połączenie z Internetem aby pobrać teksty
+            </p>
+        </div>
+    </div>
+
     <!-- Pasek menu -->
-    <header id="mainHeader" class="c-header h-display--none">
+    <header id="mainHeader" class="c-header">
         <div class="c-header__menu container">
             <img src="img/menu.png" id="headerMenuIcon" class="h-header__menu__menu-icon" alt="menu">
-            <h1 id="mainHeaderText" class="h-header__menu__header">Ekran główny</h1>
+            <h1 id="mainHeaderText" class="h-header__menu__header">Śpiewnik</h1>
             <div id="headerMenuGradient" class="c-header__menu__gradient h-display--none"></div>
             <img src="img/search.png" id="headerSearchIcon" class="c-header__menu__icon h-display--none" alt="search">
             <img src="img/font.png" id="headerFontIcon" class="h-header__menu__icon--big c-header__menu__icon h-display--none" alt="font settings">
@@ -33,20 +43,8 @@
         </div>
     </header>
 
-    <!-- Ekran powitalny -->
-    <div id="welcomePanel" class="c-welcome--gradient">
-        <div class="c-welcome">
-            <div class="c-welcome__main">
-                <img src="img/pray.png" alt="pray" class="c-welcome__icon">
-                <p id="welcomeQuote" class="is-welcome--text-color"></p>
-                <p id="welcomeQuoteAuthor" class="c-welcome__author is-welcome--text-color"></p>
-            </div>
-            <p class="c-welcome__footer is-welcome--text-color">Dotknij ekranu aby kontynuować...</p>
-        </div>
-    </div>
-
     <!-- Ekran główny -->
-    <main id="homePanel" class="container h-display--none l-margin--medium">
+    <main id="homePanel" class="container l-margin--medium">
         <div id="songsLink" class="c-home-elem">
             <div class="c-home-elem__img-div">
                 <img src="img/music-book.png" class="c-home-elem__img">
