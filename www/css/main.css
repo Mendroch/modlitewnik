@@ -406,6 +406,17 @@ h2 {
     100% { opacity: 0%; }
 }
 
+/* ---- informacje ---- */
+
+.c-info {
+    margin: 68px 15px 15px 15px;
+    line-height: 1.2;
+}
+
+.c-info__link-flaticon {
+    color: var(--secondary)
+}
+
 /* ---- ustawienia ---- */
 
 .c-settings__elem {

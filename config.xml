@@ -2,6 +2,7 @@
 <widget id="io.cordova.hellocordova" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Prayo</name>
     <description>Aplikacja z pieśniami religijnymi</description>
+    <icon src="www/img/icon.png" />
     <author email="dev@cordova.apache.org" href="https://cordova.apache.org">
         Krzysztof Mendroch
     </author>

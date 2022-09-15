@@ -30,10 +30,17 @@ class Prayo {
     }
 
     initializeData = () => {
+        this.getCategoriesAndSongs()
         getSongsUpdateRequest.then(() => {
             this.updateData()
         }).catch(() =>  {
-            this.getCategoriesAndSongs()
+            if (!localStorage.getItem('songsLastUpdate')) {
+                this.togglePopUp(this.viewElems.networkInformation, true)
+                this.viewElems.shadow.removeEventListener('click', this.toggleShadowWith)
+                window.addEventListener('online', () => {
+                    location.reload();
+                })
+            }
         })
     }
 
@@ -73,6 +80,10 @@ class Prayo {
         })
         this.viewElems.menuSettings.addEventListener('click', () => {
             this.switchView(this.viewElems.settings)
+            this.toggleMenu()
+        })
+        this.viewElems.menuInfo.addEventListener('click', () => {
+            this.switchView(this.viewElems.infoPanel)
             this.toggleMenu()
         })
         this.viewElems.menu.addEventListener('touchstart', this.handleTouchStart, false)
@@ -240,6 +251,9 @@ class Prayo {
             this.currentView.classList.add('h-display--none')
 
             switch (viewOpen) {
+                case this.viewElems.homePanel:
+                    this.editMainHeader()
+                break
                 case this.viewElems.songsCategories:
                     this.editMainHeader(true, 'Kategorie')
                     this.switchSongsCategories()
@@ -259,8 +273,8 @@ class Prayo {
                 case this.viewElems.settings:
                     this.editMainHeader(false, 'Ustawienia')
                 break
-                case this.viewElems.homePanel:
-                    this.editMainHeader()
+                case this.viewElems.infoPanel:
+                    this.editMainHeader(false, 'Informacje')
                 break
             }
 
