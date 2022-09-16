@@ -1,5 +1,5 @@
 import { mapListToDOMElements, createDOMElem } from './dominteractions.js'
-import { getSongs, getCategories, getTextSettings, setTextSettings, getCategoriesLastUpdateLS } from './getsetdata.js'
+import { getSongs, getCategories, getTextSettings, setTextSettings } from './getsetdata.js'
 import { getLocalStorageData, getCategoriesUpdate, getSongsUpdate } from './updatecontent.js'
 import { getSongsUpdateRequest } from './requests.js'
 
@@ -574,8 +574,7 @@ class Prayo {
     }
 
     zoomTouchStart = (e) => {
-        if (e.targetTouches.length === 2) {
-            this.viewElems.song.classList.add('is-stop-scrolling')
+        if (e.touches.length === 2) {
             e.preventDefault()
             this.fontSizeStartGesture = this.settings.fontSize
             this.initialDistance = Math.round(Math.sqrt(Math.pow(e.touches[0].pageX - e.touches[1].pageX, 2)
@@ -584,9 +583,7 @@ class Prayo {
     }
 
     zoomTouchMove = (e) => {
-        if (e.targetTouches.length === 2) {
-            this.viewElems.song.classList.add('is-stop-scrolling')
-            e.preventDefault()
+        if (e.touches.length === 2) {
             let currentDistance = Math.round(Math.sqrt(Math.pow(e.touches[0].pageX - e.touches[1].pageX, 2)
             + Math.pow(e.touches[0].pageY - e.touches[1].pageY, 2)))
 

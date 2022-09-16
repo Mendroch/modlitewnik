@@ -592,5 +592,6 @@ h2 {
 /* ---- pieśń ---- */
 
 .c-song {
+    height: 100vh;
     margin: 68px 15px 15px 15px;
 }
