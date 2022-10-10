@@ -12,6 +12,7 @@ export const getLocalStorageData = () => {
     })
 }
 
+// Aktualizuje kategorie
 export const getCategoriesUpdate = () => {
     return new Promise((resolve, reject) => {
         getCategoriesUpdateRequest.then((response) => {
@@ -32,6 +33,7 @@ export const getCategoriesUpdate = () => {
     })
 }
 
+// Aktualizuje pieśni
 export const getSongsUpdate = () => {
     return new Promise((resolve, reject) => {
         getSongsUpdateRequest.then((response) => {

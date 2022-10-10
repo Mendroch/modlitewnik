@@ -79,6 +79,11 @@
         </div>
     </div>
 
+    <!-- Ekran informacji -->
+    <main id="infoPanel" class="c-info h-display--none">
+        <a href="https://www.flaticon.com" title="search icons" class="c-info__link-flaticon">Ikony zaprojektowane przez Freepik - Flaticon</a>
+    </main>
+
     <!-- Ekran ustawień -->
     <main id="settings" class="c-settings h-display--none l-margin--small">
         <div id="settingsFontType" class="c-settings__elem">
@@ -95,28 +100,30 @@
         </div>
     </main>
 
-    <!-- Ekran informacji -->
-    <main id="infoPanel" class="c-info h-display--none">
-        <a href="https://www.flaticon.com/free-icons/search" title="search icons" class="c-info__link-flaticon">Ikony zaprojektowane przez Freepik - Flaticon</a>
-    </main>
-
     <!-- Okno wyboru czcionki -->
     <div id="fontType" class="c-font container h-display--none">
         <p class="c-font__header">Czcionka</p>
         <form id="fontTypeForm">
             <fieldset class="l-font__form">
-                <label class="h-font__text is-font-type--Inter">
-                    <input type="radio" value="Inter" name="fontType">Inter</label>
-                <label class="h-font__text is-font-type--ArchivoNarrow">
-                    <input type="radio" value="Archivo Narrow" name="fontType">Archivo Narrow</label>
-                <label class="h-font__text is-font-type--Anaheim">
-                    <input type="radio" value="Anaheim" name="fontType">Anaheim</label>
-                <label class="h-font__text is-font-type--EBGaramond">
-                    <input type="radio" value="EB Garamond" name="fontType">EB Garamond</label>
-                <label class="h-font__text is-font-type--PTSans">
-                    <input type="radio" value="PT Sans" name="fontType">PT Sans</label>
-                <label class="h-font__text is-font-type--Raleway">
-                    <input type="radio" value="Raleway" name="fontType">Raleway</label>
+
+                <input id="fontType1" type="radio" value="Inter" name="fontType">
+                <label for="fontType1" class="radio-custom h-font__text is-font-type--Inter">Inter</label>
+
+                <input id="fontType2" type="radio" value="Archivo Narrow" name="fontType">
+                <label for="fontType2" class="radio-custom h-font__text is-font-type--ArchivoNarrow">Archivo Narrow</label>
+
+                <input id="fontType3" type="radio" value="Anaheim" name="fontType">
+                <label for="fontType3" class="radio-custom h-font__text is-font-type--Anaheim">Anaheim</label>
+
+                <input id="fontType4" type="radio" value="EB Garamond" name="fontType">
+                <label for="fontType4" class="radio-custom h-font__text is-font-type--EBGaramond">EB Garamond</label>
+
+                <input id="fontType5" type="radio" value="PT Sans" name="fontType">
+                <label for="fontType5" class="radio-custom h-font__text is-font-type--PTSans">PT Sans</label>
+
+                <input id="fontType6" type="radio" value="Raleway" name="fontType">
+                <label for="fontType6" class="radio-custom h-font__text is-font-type--Raleway">Raleway</label>
+                
             </fieldset>
             <div class="l-font__button">
                 <button type="button" id="fontTypeBtn" class="c-font__button">OK</button>

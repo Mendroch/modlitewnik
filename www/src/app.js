@@ -8,6 +8,7 @@ class Prayo {
         this.viewElems = {}
         this.settings
         this.fontSizeStartGesture
+        this.fontSizeInTouchEvent
         this.temporaryCategoryNum
         this.songCategoryNum
         this.songTitle
@@ -25,10 +26,11 @@ class Prayo {
         this.setupListeners()
         this.initializeData()
         this.setSettings()
-        this.setSettingsTexts()
+        this.updateSettingsTexts()
         this.createCustomSelect()
     }
 
+    // Zaciąganie danych z serwera i ich aktualizacja jeśli jest to możliwe
     initializeData = () => {
         this.getCategoriesAndSongs()
         getSongsUpdateRequest.then(() => {
@@ -54,11 +56,13 @@ class Prayo {
         })
     }
 
+    // Pobiera dane z Local Storage
     getCategoriesAndSongs = () => {
         this.categories = getCategories()
         this.songs = getSongs()
     }
 
+    // Chwyta elementy drzewa DOM
     connectDOMElements = () => {
         const listOfIds = Array.from(document.querySelectorAll('[id]')).map(elem => elem.id)
         this.viewElems = mapListToDOMElements(listOfIds, 'id')
@@ -67,6 +71,7 @@ class Prayo {
         this.listOfRadioFontLineHeight = document.querySelectorAll("input[name='fontLineHeight']")
     }
 
+    // Ustawia wszystkie Listenery
     setupListeners = () => {
         this.viewElems.headerMenuIcon.addEventListener('click', this.toggleMenu)
         this.viewElems.shadow.addEventListener('click', this.toggleShadowWith)
@@ -132,12 +137,7 @@ class Prayo {
         })
     }
 
-    setQuote = () => {
-        let quote = getQuote()
-        this.viewElems.welcomeQuote.innerText = quote[0]
-        this.viewElems.welcomeQuoteAuthor.innerText = quote[1]
-    }
-
+    // Zamyka shadow razem z menu albo popup
     toggleShadowWith = () => {
         if (this.currentPopUp === this.viewElems.menu) {
             this.toggleMenu()
@@ -146,6 +146,7 @@ class Prayo {
         }
     }
     
+    // Przełącza menu
     toggleMenu = () => {
         if (this.viewElems.menu.style.display === 'block') {
             this.viewElems.menu.classList.add('is-menu--close')
@@ -161,6 +162,7 @@ class Prayo {
         }
     }
 
+    // Przełącza shadow
     toggleShadow = (open = false) => {
         if (!open) {
             this.viewElems.shadow.classList.add('is-shadow--close')
@@ -174,6 +176,7 @@ class Prayo {
         }
     }
 
+    // Przełącza popup
     togglePopUp = (popUp, open = false) => {
         this.currentPopUp = popUp
         this.toggleShadow(open)
@@ -193,6 +196,7 @@ class Prayo {
         }
     }
 
+    // Edytuje zawartość paska menu
     editMainHeader = (searchIcon = false, text = 'Śpiewnik', searchInput = false, arrow = false, smallText = false, fontSettings = false) => {
         if (searchIcon) {
             this.viewElems.headerSearchIcon.classList.remove('h-display--none')
@@ -237,6 +241,7 @@ class Prayo {
         }
     }
 
+    // Przełącza przeźroczystość body
     fadeInOut = () => {
         if (this.viewElems.body.style.opacity === '1' || this.viewElems.body.style.opacity === '') {
             this.viewElems.body.style.opacity = '0'
@@ -245,6 +250,7 @@ class Prayo {
         }
     }
 
+    // Przełącza widok
     switchView = (viewOpen) => {
         this.fadeInOut()
         setTimeout(() => {
@@ -284,6 +290,7 @@ class Prayo {
         }, 100)
     }
 
+    // Cofa widok przy użyciu strzałki
     undoView = () => {
         if (this.currentView === this.viewElems.songsTitles) {
             this.switchView(this.viewElems.songsCategories)
@@ -298,6 +305,7 @@ class Prayo {
         }
     }
 
+    // Tworzy element listy kategorii albo tytułów
     createSongSelection = (text) => {
         const songsElem = createDOMElem('div', 'c-songs-elem')
         const songsElemText = createDOMElem('p', 'c-songs-elem__text', text)
@@ -309,6 +317,7 @@ class Prayo {
         return songsElem
     }
 
+    // Tworzy widok listy kategorii pieśni
     switchSongsCategories = () => {
         this.viewElems.songsCategories.innerHTML = ''
         this.currentView = 'categories'
@@ -325,6 +334,7 @@ class Prayo {
         })
     }
 
+    // Tworzy widok listy tytułów pieśni
     switchSongsTitles = () => {
         this.viewElems.songsTitles.innerHTML = ''
         if (this.isSearchOpened) {
@@ -347,6 +357,7 @@ class Prayo {
         })
     }
 
+    // Tworzy widok pieśni
     switchSong = () => {
         this.viewElems.song.innerHTML = ''
         this.currentView = 'song'
@@ -359,6 +370,7 @@ class Prayo {
         })
     }
 
+    // Tworzy widok wyszukiwania
     switchSearch = () => {
         if (!this.isSearchOpened) {
             this.clearInput()
@@ -369,6 +381,7 @@ class Prayo {
         this.currentView = 'search'
     }
 
+    // Czyści input
     clearInput = () => {
         this.viewElems.searchInput.value = ''
         this.viewElems.search.innerHTML = ''
@@ -377,6 +390,7 @@ class Prayo {
         this.searchSong()
     }
 
+    // Wyszukuje pieśni i wyświetla wyniki
     searchSong = () => {
         this.viewElems.search.innerHTML = ''
         let inputText = this.viewElems.searchInput.value
@@ -398,7 +412,8 @@ class Prayo {
             }
         })
     }
-
+    
+    // Aktualizuje zaznaczenie radio inputów w ustawieniach
     updateRadioInputs = () => {
         let list = [
             this.listOfRadioFontType,
@@ -417,7 +432,8 @@ class Prayo {
         })
     }
 
-    setSettingsTexts = () => {
+    // Aktualizuje wszystkie napisy ustawień
+    updateSettingsTexts = () => {
         this.viewElems.settingsFontTypeText.innerText = this.settings.fontFamily
         this.viewElems.fontTypeSelect.value = this.settings.fontFamily
         this.viewElems.settingsFontSizeText.innerText = this.settings.fontSize
@@ -436,6 +452,7 @@ class Prayo {
         this.updateRadioInputs()
     }
 
+    // Aktualizuje wygląd czcionki do bierzących ustawień
     setSettings = () => {
         this.settings = getTextSettings()
         this.viewElems.song.style.fontFamily = `'${this.settings.fontFamily}', sans-serif`
@@ -443,6 +460,7 @@ class Prayo {
         this.viewElems.song.style.lineHeight = this.settings.lineHeight
     }
 
+    // Wprowadza zmiany ustawień czcionki przy zatwierdzeniu popup w ustawieniach
     changeFontSettings = (list, view) => {
         for (const radio of list) {
             if (radio.checked) {
@@ -461,16 +479,18 @@ class Prayo {
         }
         this.deleteCustomSelect()
         this.setSettings()
-        this.setSettingsTexts()
+        this.updateSettingsTexts()
         this.createCustomSelect()
     }
 
+    // Zapisuje i wprowadza zmiany ustawień czcionki
     changeAllFontSettings = () => {
         setTextSettings(this.viewElems.fontTypeSelect.value, this.viewElems.fontSizeSelect.value, this.viewElems.fontLineHeightSelect.value)
         this.setSettings()
-        this.setSettingsTexts()
+        this.updateSettingsTexts()
     }
 
+    // Usuwa customowe pola wyboru ustawień
     deleteCustomSelect = () => {
         let list = Array.from(document.getElementsByClassName("select-selected"))
         list.forEach(elem => {
@@ -478,6 +498,7 @@ class Prayo {
         })
     }
 
+    // Tworzy customowe pola wyboru ustawień
     createCustomSelect = () => {
         let fontClasses = [
             "is-font-type--Inter",
@@ -573,6 +594,7 @@ class Prayo {
         document.addEventListener("click", closeAllSelect)
     }
 
+    // Określa początkowe wartości przy używaniu gestu
     zoomTouchStart = (e) => {
         if (e.touches.length === 2) {
             e.preventDefault()
@@ -582,6 +604,7 @@ class Prayo {
         }
     }
 
+    // Aktualizuje rozmiar czcionki przy używaniu gestu
     zoomTouchMove = (e) => {
         if (e.touches.length === 2) {
             let currentDistance = Math.round(Math.sqrt(Math.pow(e.touches[0].pageX - e.touches[1].pageX, 2)
@@ -590,38 +613,43 @@ class Prayo {
             let fontsSize = ['12px', '15px', '17px', '20px', '22px', '25px']
             let newfontSize = Math.floor((currentDistance - this.initialDistance) / 40)
             let fontSize = fontsSize[fontsSize.indexOf(this.fontSizeStartGesture) + newfontSize]
-            if (fontSize !== undefined && fontSize !== this.settings.fontSize) {
-                setTextSettings(this.settings.fontFamily, fontSize, this.settings.lineHeight)
-                this.setSettings()
+            if (fontSize !== undefined && fontSize !== this.fontSizeInTouchEvent) {
+                this.viewElems.song.style.fontSize = fontSize
+                this.fontSizeInTouchEvent = fontSize
             }
         }
     }
 
+    // Zapisuje ustawienia czcinki po zakończeniu używania gestu
     zoomTouchEnd = (e) => {
         if (e.touches.length === 1) {
-            this.viewElems.song.classList.remove('is-stop-scrolling')
-            this.fontSizeStartGesture = this.settings.fontSize
             this.deleteCustomSelect()
-            this.setSettingsTexts()
+            setTextSettings(this.settings.fontFamily, this.fontSizeInTouchEvent, this.settings.lineHeight)
+            this.settings = getTextSettings()
+            this.updateSettingsTexts()
             this.createCustomSelect()
         }
     }
 
+    // Zamyka menu 
     touchCloseMenu = () => {
         this.toggleShadow()
         this.viewElems.menu.style.display = 'none'
     }
 
+    // Określa początkową pozycje dotyku przy zamykaniu menu gestem
     handleTouchStart = (e) => {
         this.menuStartTouchPosition = e.changedTouches[0].clientX
     }
 
+    // Aktualizuje pozycje menu
     handleTouch = (e) => {
         let x = e.changedTouches[0].clientX
         let position = -this.menuStartTouchPosition + x
         if ( position < 0 ) this.viewElems.menu.style.transform = `translateX(${-(this.menuStartTouchPosition - x) + 'px'})`
     }
 
+    // Zamyka lub przywraca menu do pozycji początkowej po oderwaniu palca
     handleTouchEnd = (e) => {
         let x = e.changedTouches[0].clientX
         let total = this.viewElems.menu.clientWidth

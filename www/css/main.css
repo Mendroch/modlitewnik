@@ -436,6 +436,29 @@ h2 {
 
 /* ---- ustawienia czcionki ---- */
 
+.radio-custom {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.radio-custom:before{
+    content: "";
+    height: 20px;
+    width: 20px;
+    border: 3px solid var(--primary);
+    border-radius: 50%;
+    margin-right: 20px;
+}
+
+input[type="radio"]{
+    display: none;
+}
+  
+input[type="radio"]:checked + .radio-custom:before {
+    background-color: var(--primary);
+}
+
 .c-font {
     margin-left: 2%;
     position: fixed;
@@ -449,7 +472,7 @@ h2 {
 
 .c-font__header {
     font-size: 22px;
-    margin-bottom: 35px;
+    margin-bottom: 32px;
 }
 
 .l-font__form {
@@ -458,7 +481,7 @@ h2 {
 }
 
 .h-font__text {
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 
 .l-font__button {
