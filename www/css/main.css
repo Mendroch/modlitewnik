@@ -213,54 +213,6 @@ h2 {
     width: 114px;
 }
 
-/* ---- ekran powitalny ---- */
-
-.c-welcome--gradient {
-    background: linear-gradient(155deg, var(--outline) 0%, var(--form) 100%);
-}
-
-.c-welcome {
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100vh;
-    width: 80%;
-}
-
-.c-welcome__main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: calc(100vh - 30px);
-}
-
-.c-welcome__icon {
-    margin-bottom: 64px;
-    width: 100px;
-}
-
-.is-welcome--text-color {
-    color: var(--second-text);
-}
-
-.c-welcome__author {
-    margin-top: 20px;
-    font-size: 15px;
-}
-
-.c-welcome__footer {
-    font-size: 12px;
-    animation: pulsing 2s linear infinite;
-}
-
-@keyframes pulsing {
-    0% { color: var(--second-text) }
-    50% { color: var(--main-text) }
-    100% { color: var(--second-text) }
-}
-
 /* ---- ekran główny ---- */
 
 .c-home-elem {
@@ -317,7 +269,7 @@ h2 {
 /* ---- menu ---- */
 
 .c-menu {
-    position: absolute;
+    position: fixed;
     top: 0;
     display: none;
     overflow-y: scroll;
@@ -594,8 +546,9 @@ input[type="radio"]:checked + .radio-custom:before {
     position: absolute;
     left: 15px;
     height: 18px;
-    overflow-x: hidden;
-    overflow-y: hidden;
+    max-width: calc(100vw - 71px);
+    white-space: nowrap;
+    overflow: scroll;
 }
 
 .c-songs-elem__gradient {
@@ -615,6 +568,6 @@ input[type="radio"]:checked + .radio-custom:before {
 /* ---- pieśń ---- */
 
 .c-song {
-    height: 100vh;
+    min-height: 100vh;
     margin: 68px 15px 15px 15px;
 }

@@ -1,6 +1,6 @@
 import { mapListToDOMElements, createDOMElem } from './dominteractions.js'
-import { getSongs, getCategories, getTextSettings, setTextSettings } from './getsetdata.js'
-import { getLocalStorageData, getCategoriesUpdate, getSongsUpdate } from './updatecontent.js'
+import { getTextSettings, setTextSettings, getLSData } from './getsetdata.js'
+import { getLocalStorageData, getSongsCategoriesUpdate, getSongsUpdate, getPrayersCategoriesUpdate, getPrayersUpdate } from './updatecontent.js'
 import { getSongsUpdateRequest } from './requests.js'
 
 class Prayo {
@@ -10,8 +10,8 @@ class Prayo {
         this.fontSizeStartGesture
         this.fontSizeInTouchEvent
         this.temporaryCategoryNum
-        this.songCategoryNum
-        this.songTitle
+        this.categoryNum
+        this.textTitle
         this.backViewFromSearch
         this.isSearchOpened = false
         this.initializeApp()
@@ -19,6 +19,7 @@ class Prayo {
         this.currentPopUp
         this.initialDistance
         this.menuStartTouchPosition
+        this.contentType
     }
 
     initializeApp = () => {
@@ -32,7 +33,7 @@ class Prayo {
 
     // Zaciąganie danych z serwera i ich aktualizacja jeśli jest to możliwe
     initializeData = () => {
-        this.getCategoriesAndSongs()
+        this.getCategoriesAndTexts()
         getSongsUpdateRequest.then(() => {
             this.updateData()
         }).catch(() =>  {
@@ -48,18 +49,22 @@ class Prayo {
 
     updateData = () => {
         getLocalStorageData()
-        .then(getCategoriesUpdate)
+        .then(getSongsCategoriesUpdate)
         .then(getSongsUpdate)
-        .then(this.getCategoriesAndSongs)
+        .then(getPrayersCategoriesUpdate)
+        .then(getPrayersUpdate)
+        .then(this.getCategoriesAndTexts)
         .catch(err => {
             alert(err)
         })
     }
 
     // Pobiera dane z Local Storage
-    getCategoriesAndSongs = () => {
-        this.categories = getCategories()
-        this.songs = getSongs()
+    getCategoriesAndTexts = () => {
+        this.songsCategories = getLSData('songsCategories')
+        this.songs = getLSData('songs')
+        this.prayersCategories = getLSData('prayersCategories')
+        this.prayers = getLSData('prayers')
     }
 
     // Chwyta elementy drzewa DOM
@@ -80,7 +85,13 @@ class Prayo {
             this.toggleMenu()
         })
         this.viewElems.menuSongs.addEventListener('click', () => {
-            this.switchView(this.viewElems.songsCategories)
+            this.contentType = 'songs'
+            this.switchView(this.viewElems.textsCategories)
+            this.toggleMenu()
+        })
+        this.viewElems.menuPrayers.addEventListener('click', () => {
+            this.contentType = 'prayers'
+            this.switchView(this.viewElems.textsCategories)
             this.toggleMenu()
         })
         this.viewElems.menuSettings.addEventListener('click', () => {
@@ -95,7 +106,12 @@ class Prayo {
         this.viewElems.menu.addEventListener('touchmove', this.handleTouch, false)
         this.viewElems.menu.addEventListener('touchend', this.handleTouchEnd, false)
         this.viewElems.songsLink.addEventListener('click', () => {
-            this.switchView(this.viewElems.songsCategories)
+            this.contentType = 'songs'
+            this.switchView(this.viewElems.textsCategories)
+        })
+        this.viewElems.prayersLink.addEventListener('click', () => {
+            this.contentType = 'prayers'
+            this.switchView(this.viewElems.textsCategories)
         })
         this.viewElems.headerSearchIcon.addEventListener('click', () => {
             this.switchView(this.viewElems.search)
@@ -103,7 +119,7 @@ class Prayo {
         this.viewElems.headerFontIcon.addEventListener('click', () => {
             this.togglePopUp(this.viewElems.fontAllSettings, true)
         })
-        this.viewElems.searchInput.addEventListener('keyup', this.searchSong)
+        this.viewElems.searchInput.addEventListener('keyup', this.searchText)
         this.viewElems.searchDelete.addEventListener('click', this.clearInput)
         this.viewElems.settingsFontType.addEventListener('click', () => {
             this.togglePopUp(this.viewElems.fontType, true)
@@ -126,13 +142,13 @@ class Prayo {
         this.viewElems.fontTypeSelect.addEventListener('change', this.changeAllFontSettings)
         this.viewElems.fontSizeSelect.addEventListener('change', this.changeAllFontSettings)
         this.viewElems.fontLineHeightSelect.addEventListener('change', this.changeAllFontSettings)
-        this.viewElems.song.addEventListener('touchstart', e => {
+        this.viewElems.text.addEventListener('touchstart', e => {
             this.zoomTouchStart(e)
         })
-        this.viewElems.song.addEventListener('touchmove', e => {
+        this.viewElems.text.addEventListener('touchmove', e => {
             this.zoomTouchMove(e)
         })
-        this.viewElems.song.addEventListener('touchend', e => {
+        this.viewElems.text.addEventListener('touchend', e => {
             this.zoomTouchEnd(e)
         })
     }
@@ -260,17 +276,21 @@ class Prayo {
                 case this.viewElems.homePanel:
                     this.editMainHeader()
                 break
-                case this.viewElems.songsCategories:
+                case this.viewElems.textsCategories:
                     this.editMainHeader(true, 'Kategorie')
-                    this.switchSongsCategories()
+                    this.switchTextsCategories()
                 break
-                case this.viewElems.songsTitles:
-                    this.editMainHeader(true, 'Pieśni', false, true)
-                    this.switchSongsTitles()
+                case this.viewElems.textsTitles:
+                    if (this.contentType === 'songs') {
+                        this.editMainHeader(true, 'Pieśni', false, true)
+                    } else if (this.contentType === 'prayers') {
+                        this.editMainHeader(true, 'Modlitwy', false, true)
+                    }
+                    this.switchTextsTitles()                    
                 break
-                case this.viewElems.song:
-                    this.editMainHeader(false, this.songTitle, false, true, true, true)
-                    this.switchSong()
+                case this.viewElems.text:
+                    this.editMainHeader(false, this.textTitle, false, true, true, true)
+                    this.switchText()
                 break
                 case this.viewElems.search:
                     this.editMainHeader(false, 'Szukaj', true, true)
@@ -292,79 +312,101 @@ class Prayo {
 
     // Cofa widok przy użyciu strzałki
     undoView = () => {
-        if (this.currentView === this.viewElems.songsTitles) {
-            this.switchView(this.viewElems.songsCategories)
-        } else if (this.currentView === this.viewElems.song && !this.isSearchOpened) {
-            this.switchView(this.viewElems.songsTitles)
-        } else if (this.currentView === this.viewElems.search && this.backViewFromSearch === 'categories') {
-            this.switchView(this.viewElems.songsCategories)
+        if (this.currentView === this.viewElems.textsTitles) {
+            this.switchView(this.viewElems.textsCategories)
+        } else if (this.currentView === this.viewElems.text && !this.isSearchOpened) {
+            this.switchView(this.viewElems.textsTitles)
+        } else if (this.currentView === this.viewElems.search && this.backViewFromSearch === 'textsCategories') {
+            this.switchView(this.viewElems.textsCategories)
         } else if (this.currentView === this.viewElems.search && this.backViewFromSearch === 'titles') {
-            this.switchView(this.viewElems.songsTitles)
-        } else if (this.currentView === this.viewElems.song && this.isSearchOpened) {
+            this.switchView(this.viewElems.textsTitles)
+        } else if (this.currentView === this.viewElems.text && this.isSearchOpened) {
             this.switchView(this.viewElems.search)
         }
     }
 
     // Tworzy element listy kategorii albo tytułów
     createSongSelection = (text) => {
-        const songsElem = createDOMElem('div', 'c-songs-elem')
-        const songsElemText = createDOMElem('p', 'c-songs-elem__text', text)
-        const songsElemGradient = createDOMElem('div', 'c-songs-elem__gradient')
-        const songsElemImg = createDOMElem('img', 'c-songs-elem__img', null, './img/right-arrow.png')
-        songsElem.appendChild(songsElemText)
-        songsElem.appendChild(songsElemGradient)
-        songsElem.appendChild(songsElemImg)
-        return songsElem
+        const listElem = createDOMElem('div', 'c-songs-elem')
+        const listElemText = createDOMElem('p', 'c-songs-elem__text', text)
+        const listElemGradient = createDOMElem('div', 'c-songs-elem__gradient')
+        const listElemImg = createDOMElem('img', 'c-songs-elem__img', null, './img/right-arrow.png')
+        listElem.appendChild(listElemText)
+        listElem.appendChild(listElemGradient)
+        listElem.appendChild(listElemImg)
+        return listElem
     }
 
     // Tworzy widok listy kategorii pieśni
-    switchSongsCategories = () => {
-        this.viewElems.songsCategories.innerHTML = ''
-        this.currentView = 'categories'
-        this.backViewFromSearch = 'categories'
+    switchTextsCategories = () => {
+        this.viewElems.textsCategories.innerHTML = ''
+        this.currentView = 'textsCategories'
+        this.backViewFromSearch = 'textsCategories'
         this.isSearchOpened = false
+        let categories
+        
+        if (this.contentType === "songs") {
+            categories = this.songsCategories
+        } else if (this.contentType === "prayers") {
+            categories = this.prayersCategories
+        }
 
-        this.categories.forEach(category => {
-            const songsElem = this.createSongSelection(category.name)
-            songsElem.addEventListener('click', () => {
-                this.songCategoryNum = category.id
-                this.switchView(this.viewElems.songsTitles)
+        categories.forEach(category => {
+            const listElem = this.createSongSelection(category.name)
+            listElem.addEventListener('click', () => {
+                this.categoryNum = category.id
+                this.switchView(this.viewElems.textsTitles)
             })
-            this.viewElems.songsCategories.appendChild(songsElem)
+            this.viewElems.textsCategories.appendChild(listElem)
         })
     }
 
     // Tworzy widok listy tytułów pieśni
-    switchSongsTitles = () => {
-        this.viewElems.songsTitles.innerHTML = ''
+    switchTextsTitles = () => {
+        this.viewElems.textsTitles.innerHTML = ''
         if (this.isSearchOpened) {
-            this.songCategoryNum = this.temporaryCategoryNum
+            this.categoryNum = this.temporaryCategoryNum
         }
         this.currentView = 'titles'
         this.backViewFromSearch = 'titles'
         this.isSearchOpened = false
-        this.temporaryCategoryNum = this.songCategoryNum
+        this.temporaryCategoryNum = this.categoryNum
+        let titles
    
-        this.songs.forEach(song => {
-            if (this.songCategoryNum === song.category_id) {
-                const songsElem = this.createSongSelection(song.name)
-                songsElem.addEventListener('click', () => {
-                    this.songTitle = song.name
-                    this.switchView(this.viewElems.song)
+        if (this.contentType === "songs") {
+            titles = this.songs
+        } else if (this.contentType === "prayers") {
+            titles = this.prayers
+        }
+
+        titles.forEach(text => {
+            if (this.categoryNum === text.category_id) {
+                const listElem = this.createSongSelection(text.name)
+                listElem.addEventListener('click', () => {
+                    this.textTitle = text.name
+                    this.switchView(this.viewElems.text)
                 })
-                this.viewElems.songsTitles.appendChild(songsElem)
+                this.viewElems.textsTitles.appendChild(listElem)
             }
         })
     }
 
     // Tworzy widok pieśni
-    switchSong = () => {
-        this.viewElems.song.innerHTML = ''
-        this.currentView = 'song'
-        this.songs.forEach(song => {
-            if (this.songTitle === song.name) {
-                const text = createDOMElem('p', 'c-song', null, null, song.content)
-                this.viewElems.song.appendChild(text)
+    switchText = () => {
+        this.viewElems.text.innerHTML = ''
+        this.currentView = 'text'
+        let text
+
+        if (this.contentType === "songs") {
+            text = this.songs
+        } else if (this.contentType === "prayers") {
+            text = this.prayers
+        }
+
+        text.forEach(text => {
+            if (this.textTitle === text.name && this.categoryNum === text.category_id) {
+                const textParagraph = createDOMElem('p', 'c-song', null, null, text.content)
+                this.viewElems.text.appendChild(textParagraph)
                 return
             }
         })
@@ -376,7 +418,7 @@ class Prayo {
             this.clearInput()
         } else this.viewElems.searchInput.focus()
 
-        this.searchSong()
+        this.searchText()
         this.isSearchOpened = true
         this.currentView = 'search'
     }
@@ -387,13 +429,14 @@ class Prayo {
         this.viewElems.search.innerHTML = ''
         this.viewElems.searchDelete.classList.add('h-display--none')
         this.viewElems.searchInput.focus()
-        this.searchSong()
+        this.searchText()
     }
 
     // Wyszukuje pieśni i wyświetla wyniki
-    searchSong = () => {
+    searchText = () => {
         this.viewElems.search.innerHTML = ''
         let inputText = this.viewElems.searchInput.value
+        let texts
 
         if (inputText === '') {
             this.viewElems.searchDelete.classList.add('h-display--none')
@@ -401,14 +444,20 @@ class Prayo {
             this.viewElems.searchDelete.classList.remove('h-display--none')
         }
 
-        this.songs.forEach(song => {
-            if (song.name.toLowerCase().indexOf(inputText.toLowerCase()) !== -1) {
-                const songsElem = this.createSongSelection(song.name)
-                songsElem.addEventListener('click', () => {
-                    this.songTitle = song.name
-                    this.switchView(this.viewElems.song)
+        if (this.contentType === "songs") {
+            texts = this.songs
+        } else if (this.contentType === "prayers") {
+            texts = this.prayers
+        }
+
+        texts.forEach(text => {
+            if (text.name.toLowerCase().indexOf(inputText.toLowerCase()) !== -1) {
+                const listElem = this.createSongSelection(text.name)
+                listElem.addEventListener('click', () => {
+                    this.textTitle = text.name
+                    this.switchView(this.viewElems.text)
                 })
-                this.viewElems.search.appendChild(songsElem)
+                this.viewElems.search.appendChild(listElem)
             }
         })
     }
@@ -455,9 +504,9 @@ class Prayo {
     // Aktualizuje wygląd czcionki do bierzących ustawień
     setSettings = () => {
         this.settings = getTextSettings()
-        this.viewElems.song.style.fontFamily = `'${this.settings.fontFamily}', sans-serif`
-        this.viewElems.song.style.fontSize = this.settings.fontSize
-        this.viewElems.song.style.lineHeight = this.settings.lineHeight
+        this.viewElems.text.style.fontFamily = `'${this.settings.fontFamily}', sans-serif`
+        this.viewElems.text.style.fontSize = this.settings.fontSize
+        this.viewElems.text.style.lineHeight = this.settings.lineHeight
     }
 
     // Wprowadza zmiany ustawień czcionki przy zatwierdzeniu popup w ustawieniach
@@ -614,7 +663,7 @@ class Prayo {
             let newfontSize = Math.floor((currentDistance - this.initialDistance) / 40)
             let fontSize = fontsSize[fontsSize.indexOf(this.fontSizeStartGesture) + newfontSize]
             if (fontSize !== undefined && fontSize !== this.fontSizeInTouchEvent) {
-                this.viewElems.song.style.fontSize = fontSize
+                this.viewElems.text.style.fontSize = fontSize
                 this.fontSizeInTouchEvent = fontSize
             }
         }

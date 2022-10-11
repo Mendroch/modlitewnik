@@ -47,12 +47,22 @@
     <main id="homePanel" class="container l-margin--medium">
         <div id="songsLink" class="c-home-elem">
             <div class="c-home-elem__img-div">
-                <img src="img/music-book.png" class="c-home-elem__img">
+                <img src="img/music-book.png" class="c-home-elem__img" alt="music book">
             </div>
             <div class="c-home-elem__texts">
                 <p class="c-home-elem__header">PIEŚNI</p>
                 <div class="c-home-elem__strap"></div>
                 <p class="c-home-elem__directing">PRZEDŹ DO PIEŚNI</p>
+            </div>
+        </div>
+        <div id="prayersLink" class="c-home-elem">
+            <div class="c-home-elem__img-div">
+                <img src="img/pray.png" class="c-home-elem__img" alt="pray">
+            </div>
+            <div class="c-home-elem__texts">
+                <p class="c-home-elem__header">MODLITWY</p>
+                <div class="c-home-elem__strap"></div>
+                <p class="c-home-elem__directing">PRZEDŹ DO MODLITW</p>
             </div>
         </div>
     </main>
@@ -67,6 +77,10 @@
         <div id="menuSongs" class="c-menu-elem">
             <img src="img/music-book.png" class="c-menu-elem__img" alt="music book">
             <p>Pieśni</p>
+        </div>
+        <div id="menuPrayers" class="c-menu-elem">
+            <img src="img/pray.png" class="c-menu-elem__img" alt="pray">
+            <p>Modlitwy</p>
         </div>
         <div class="c-menu__strap"></div>
         <div id="menuSettings" class="c-menu-elem">
@@ -219,13 +233,13 @@
     <main id="search" class="h-display--none l-margin--large"></main>
 
     <!-- Ekran wyboru kategorii pieśni -->
-    <main id="songsCategories" class="h-display--none l-margin--small"></main>
+    <main id="textsCategories" class="h-display--none l-margin--small"></main>
 
     <!-- Ekran wyboru pieśni -->
-    <main id="songsTitles" class="h-display--none l-margin--small"></main>
+    <main id="textsTitles" class="h-display--none l-margin--small"></main>
 
     <!-- Ekran pieśni -->
-    <main id="song" class="h-display--none"></main>
+    <main id="text" class="h-display--none"></main>
 
     <script src="src/app.js" type="module"></script>
 </body>
