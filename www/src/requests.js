@@ -15,3 +15,12 @@ export const getPrayersRequest = fetch('https://kmendroch.lk.pl/api/prayers').th
 export const getPrayersCategoriesUpdateRequest = fetch('https://kmendroch.lk.pl/api/prayerscategories/last-update').then(resp => resp.json())
 
 export const getPrayersUpdateRequest = fetch('https://kmendroch.lk.pl/api/prayers/last-update').then(resp => resp.json())
+
+// Zapytania do liturgii
+export const getLiturgyCategoriesRequest = fetch('https://kmendroch.lk.pl/api/liturgycategories').then(resp => resp.json())
+
+export const getLiturgyRequest = fetch('https://kmendroch.lk.pl/api/liturgycontents').then(resp => resp.json())
+
+export const getLiturgyCategoriesUpdateRequest = fetch('https://kmendroch.lk.pl/api/liturgycategories/last-update').then(resp => resp.json())
+
+export const getLiturgyUpdateRequest = fetch('https://kmendroch.lk.pl/api/liturgycontents/last-update').then(resp => resp.json())
