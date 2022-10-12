@@ -360,10 +360,12 @@ class Prayo {
     // Tworzy element listy kategorii albo tytułów
     createListSelection = (text) => {
         const listElem = createDOMElem('div', 'c-songs-elem')
+        const listElemTextDiv = createDOMElem('div', 'c-songs-elem__text-div')
         const listElemText = createDOMElem('p', 'c-songs-elem__text', text)
         const listElemGradient = createDOMElem('div', 'c-songs-elem__gradient')
         const listElemImg = createDOMElem('img', 'c-songs-elem__img', null, './img/right-arrow.png')
-        listElem.appendChild(listElemText)
+        listElemTextDiv.appendChild(listElemText)
+        listElem.appendChild(listElemTextDiv)
         listElem.appendChild(listElemGradient)
         listElem.appendChild(listElemImg)
         return listElem

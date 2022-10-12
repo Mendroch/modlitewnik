@@ -532,7 +532,7 @@ input[type="radio"]:checked + .radio-custom:before {
     margin: 10px 0 0 0;
 }
 
-/* ---- kategorie pieśni ---- */
+/* ---- lista wyboru kategorii i tekstów ---- */
 
 .c-songs-elem {
     display: flex;
@@ -542,20 +542,25 @@ input[type="radio"]:checked + .radio-custom:before {
     border-bottom: 2px solid var(--white);
 }
 
-.c-songs-elem__text {
-    position: absolute;
-    left: 15px;
-    height: 18px;
+.c-songs-elem__text-div {
+    margin-left: 15px;
+    display: flex;
+    align-items: center;
+    height: 60px;
     max-width: calc(100vw - 71px);
-    white-space: nowrap;
     overflow: scroll;
+    text-align: center;
+}
+
+.c-songs-elem__text {
+    white-space: nowrap;
 }
 
 .c-songs-elem__gradient {
     position: absolute;
     left: calc(100vw - 90px);
     background: linear-gradient(90deg, rgba(244,245,247,0) 0%, rgba(244,245,247,1) 40%);
-    height: 25px;
+    height: 60px;
     width: 90px;
 }
 
