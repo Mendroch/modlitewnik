@@ -265,10 +265,8 @@ class Prayo {
 
         if (smallText) {
             this.viewElems.mainHeaderText.classList.add('is-header__menu__header--small')
-            this.viewElems.headerMenuGradient.classList.remove('h-display--none')
         } else {
             this.viewElems.mainHeaderText.classList.remove('is-header__menu__header--small')
-            this.viewElems.headerMenuGradient.classList.add('h-display--none')
         }
     }
 

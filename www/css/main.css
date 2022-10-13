@@ -129,12 +129,26 @@ h2 {
     height: 56px;
 }
 
-.h-header__menu__menu-icon {
+.c-header__menu__menu-icon {
+    z-index: 1;
     width: 42px;
 }
 
+.c-header__menu__header-div {
+    display: flex;
+    align-items: center;
+    height: 56px;
+    width: calc(100vw - 83px - 8%);
+    overflow: scroll;
+    white-space: nowrap;
+}
+
 .h-header__menu__header {
-    margin-left: 50px;
+    margin-left: 30px;
+}
+
+.is-header__menu__header--small {
+    font-size: 17px;
 }
 
 .c-header__menu__icon {
@@ -197,20 +211,19 @@ h2 {
     width: 36px;
 }
 
-.is-header__menu__header--small {
-    margin-left: 20px;
-    font-size: 17px;
-    height: 18px;
-    overflow-x: hidden;
-    overflow-y: hidden;
+.c-header__menu__gradient-L {
+    position: absolute;
+    background: linear-gradient(90deg, rgba(31,204,121,1) 50%, rgba(31,204,121,0) 100%);
+    height: 56px;
+    width: 70px;
 }
 
-.c-header__menu__gradient {
+.c-header__menu__gradient-R {
     position: absolute;
-    left: calc(100vw - 120px);
+    left: calc(100vw - 104px);
     background: linear-gradient(90deg, rgba(31,204,121,0) 0%, rgba(31,204,121,1) 29%);
-    height: 25px;
-    width: 114px;
+    height: 56px;
+    width: 100px;
 }
 
 /* ---- ekran główny ---- */
@@ -549,7 +562,6 @@ input[type="radio"]:checked + .radio-custom:before {
     height: 60px;
     max-width: calc(100vw - 71px);
     overflow: scroll;
-    text-align: center;
 }
 
 .c-songs-elem__text {
