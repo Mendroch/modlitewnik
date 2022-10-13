@@ -1,6 +1,7 @@
 import {getSongsCategoriesRequest, getSongsRequest, getSongsCategoriesUpdateRequest, getSongsUpdateRequest, 
     getPrayersCategoriesRequest, getPrayersRequest, getPrayersCategoriesUpdateRequest, getPrayersUpdateRequest, 
-    getLiturgyCategoriesRequest, getLiturgyRequest, getLiturgyCategoriesUpdateRequest, getLiturgyUpdateRequest
+    getLiturgyCategoriesRequest, getLiturgyRequest, getLiturgyCategoriesUpdateRequest, getLiturgyUpdateRequest,
+    getAnnouncementsRequest, getIntentionsRequest
 } from "./requests.js"
 import { getLSData } from "./getsetdata.js"
 
@@ -145,6 +146,36 @@ export const getLiturgyUpdate = () => {
             } else {
                 resolve()
             }
+        }).catch((reject) => alert(reject))
+    })
+}
+
+// Aktualizuje ogłoszenia
+export const getAnnouncements = () => {
+    return new Promise((resolve, reject) => {
+        getAnnouncementsRequest.then((response) => {
+            localStorage.setItem("announcements",JSON.stringify(response))
+            resolve()
+        }).catch((reject) => alert(reject))
+    })
+}
+
+// Aktualizuje intencje
+const addEnters = (text) => {
+    let keyWords = ['Niedziela', 'Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota']
+    for (let keyWord of keyWords) {
+        if (text.content.indexOf(keyWord) !== -1) {
+            text.content = text.content.replaceAll(keyWord, `<br/><br/>${keyWord}`)
+        }
+    }
+    return text
+}
+
+export const getIntentions = () => {
+    return new Promise((resolve, reject) => {
+        getIntentionsRequest.then((response) => {
+            localStorage.setItem("intentions",JSON.stringify(addEnters(response)))
+            resolve()
         }).catch((reject) => alert(reject))
     })
 }

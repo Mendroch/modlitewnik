@@ -24,3 +24,9 @@ export const getLiturgyRequest = fetch('https://kmendroch.lk.pl/api/liturgyconte
 export const getLiturgyCategoriesUpdateRequest = fetch('https://kmendroch.lk.pl/api/liturgycategories/last-update').then(resp => resp.json())
 
 export const getLiturgyUpdateRequest = fetch('https://kmendroch.lk.pl/api/liturgycontents/last-update').then(resp => resp.json())
+
+// Zapytanie do ogłoszeń
+export const getAnnouncementsRequest = fetch('https://www.parafiaskoczow.ox.pl/api/pages/74').then(resp => resp.json())
+
+// Zapytanie do intencji mszy
+export const getIntentionsRequest = fetch('https://www.parafiaskoczow.ox.pl/api/pages/75').then(resp => resp.json())

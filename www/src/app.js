@@ -1,6 +1,7 @@
 import { mapListToDOMElements, createDOMElem } from './dominteractions.js'
 import { getTextSettings, setTextSettings, getLSData } from './getsetdata.js'
-import { getLocalStorageData, getSongsCategoriesUpdate, getSongsUpdate, getPrayersCategoriesUpdate, getPrayersUpdate, getLiturgyCategoriesUpdate, getLiturgyUpdate } from './updatecontent.js'
+import { getLocalStorageData, getSongsCategoriesUpdate, getSongsUpdate, getPrayersCategoriesUpdate, 
+    getPrayersUpdate, getLiturgyCategoriesUpdate, getLiturgyUpdate, getAnnouncements, getIntentions } from './updatecontent.js'
 import { getSongsUpdateRequest } from './requests.js'
 
 class Prayo {
@@ -57,6 +58,8 @@ class Prayo {
         .then(getPrayersUpdate)
         .then(getLiturgyCategoriesUpdate)
         .then(getLiturgyUpdate)
+        .then(getAnnouncements)
+        .then(getIntentions)
         .then(this.getCategoriesAndTexts)
         .catch(err => {
             alert(err)
@@ -71,6 +74,8 @@ class Prayo {
         this.prayers = getLSData('prayers')
         this.liturgyCategories = getLSData('liturgyCategories')
         this.liturgy = getLSData('liturgy')
+        this.announcements = getLSData('announcements')
+        this.intentions = getLSData('intentions')
     }
 
     // Chwyta elementy drzewa DOM
@@ -105,6 +110,16 @@ class Prayo {
             this.switchView(this.viewElems.textsCategories)
             this.toggleMenu()
         })
+        this.viewElems.menuAnnouncements.addEventListener('click', () => {
+            this.contentType = 'announcements'
+            this.switchView(this.viewElems.text)
+            this.toggleMenu()
+        })
+        this.viewElems.menuIntentions.addEventListener('click', () => {
+            this.contentType = 'intentions'
+            this.switchView(this.viewElems.text)
+            this.toggleMenu()
+        })
         this.viewElems.menuSettings.addEventListener('click', () => {
             this.switchView(this.viewElems.settings)
             this.toggleMenu()
@@ -127,6 +142,14 @@ class Prayo {
         this.viewElems.liturgyLink.addEventListener('click', () => {
             this.contentType = 'liturgy'
             this.switchView(this.viewElems.textsCategories)
+        })
+        this.viewElems.announcementsLink.addEventListener('click', () => {
+            this.contentType = 'announcements'
+            this.switchView(this.viewElems.text)
+        })
+        this.viewElems.intentionsLink.addEventListener('click', () => {
+            this.contentType = 'intentions'
+            this.switchView(this.viewElems.text)
         })
         this.viewElems.headerSearchIcon.addEventListener('click', () => {
             this.switchView(this.viewElems.search)
@@ -317,6 +340,11 @@ class Prayo {
                     } else {
                         this.editMainHeader(false, this.textTitle, false, true, true, true)
                     }
+                    if (this.contentType === 'announcements') {
+                        this.editMainHeader(false, 'Ogłoszenia', false, true, true, true)
+                    } else if (this.contentType === 'intentions') {
+                        this.editMainHeader(false, 'Intencje Mszy', false, true, true, true)
+                    }
                     this.switchText()
                 break
                 case this.viewElems.search:
@@ -341,6 +369,8 @@ class Prayo {
     undoView = () => {
         if (this.currentView === this.viewElems.textsTitles) {
             this.switchView(this.viewElems.textsCategories)
+        } else if (this.currentView === this.viewElems.text && (this.contentType === 'announcements' || this.contentType === 'intentions')) {
+            this.switchView(this.viewElems.homePanel)
         } else if (this.currentView === this.viewElems.text && !this.isSearchOpened && !this.liturgyShort) {
             this.switchView(this.viewElems.textsTitles)
         } else if (this.currentView === this.viewElems.search && this.backViewFromSearch === 'textsCategories') {
@@ -437,6 +467,7 @@ class Prayo {
     switchText = () => {
         this.viewElems.text.innerHTML = ''
         this.currentView = 'text'
+        let textParagraph
         let text
 
         switch (this.contentType) {
@@ -446,7 +477,7 @@ class Prayo {
                 if (this.liturgyShort) {
                     this.liturgyCategories.forEach(category => {
                         if (this.categoryNum === category.id) {
-                            const textParagraph = createDOMElem('p', 'c-song', null, null, category.content)
+                            textParagraph = createDOMElem('p', 'c-song', null, null, category.content)
                             this.viewElems.text.appendChild(textParagraph)
                             return
                         }
@@ -454,11 +485,21 @@ class Prayo {
                 }
                 text = this.liturgy
             break
+            case "announcements":
+                textParagraph = createDOMElem('p', 'c-song', null, null, this.announcements.content)
+                this.viewElems.text.appendChild(textParagraph)
+                return
+            break
+            case "intentions":
+                textParagraph = createDOMElem('p', 'c-song', null, null, this.intentions.content)
+                this.viewElems.text.appendChild(textParagraph)
+                return
+            break
         }
 
         text.forEach(text => {
             if (this.textTitle === text.name && this.categoryNum === text.category_id) {
-                const textParagraph = createDOMElem('p', 'c-song', null, null, text.content)
+                textParagraph = createDOMElem('p', 'c-song', null, null, text.content)
                 this.viewElems.text.appendChild(textParagraph)
                 return
             }
@@ -497,12 +538,10 @@ class Prayo {
             this.viewElems.searchDelete.classList.remove('h-display--none')
         }
 
-        if (this.contentType === "songs") {
-            texts = this.songs
-        } else if (this.contentType === "prayers") {
-            texts = this.prayers
-        } else if (this.contentType === "liturgy") {
-            texts = this.liturgy
+        switch (this.contentType) {
+            case "songs": texts = this.songs; break
+            case "prayers": texts = this.prayers; break
+            case "liturgy": texts = this.liturgy; break
         }
 
         texts.forEach(text => {
