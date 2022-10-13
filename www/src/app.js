@@ -50,9 +50,15 @@ class Prayo {
         })
     }
 
+    removeLoadingScreen = () => {
+        if (getLSData('intentions') !== undefined) {
+            this.viewElems.loadingScreen.classList.add('h-display--none')
+        }
+    }
+
     updateData = () => {
-        getLocalStorageData()
-        .then(getSongsCategoriesUpdate)
+        this.removeLoadingScreen()
+        getSongsCategoriesUpdate()
         .then(getSongsUpdate)
         .then(getPrayersCategoriesUpdate)
         .then(getPrayersUpdate)
@@ -76,6 +82,7 @@ class Prayo {
         this.liturgy = getLSData('liturgy')
         this.announcements = getLSData('announcements')
         this.intentions = getLSData('intentions')
+        this.removeLoadingScreen()
     }
 
     // Chwyta elementy drzewa DOM

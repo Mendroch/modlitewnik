@@ -111,6 +111,36 @@ h2 {
     line-height: 1.3;
 }
 
+/* ---- informacja o ładowaniu treści ---- */
+
+.c-loading-screen {
+    z-index: 2;
+    position: absolute;
+    top: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, .7);
+}
+
+.c-loading-screen__div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.c-loading-screen__img {
+    height: 100px;
+    width: 100px;
+    animation: rotateIcon 1.3s infinite linear;
+}
+
+@keyframes rotateIcon {
+    0% { transform: rotate(360deg); }
+    50% { transform: rotate(180deg); }
+    100% { transform: rotate(0deg); }
+}
+
 /* ---- pasek menu ---- */
 
 .c-header {
@@ -232,6 +262,10 @@ h2 {
     margin-top: 10px;
     display: flex;
     height: 120px;
+}
+
+.c-home-elem:last-of-type {
+    margin-bottom: 10px;
 }
 
 .c-home-elem__img-div {
