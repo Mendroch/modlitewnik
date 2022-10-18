@@ -510,11 +510,12 @@ class Prayo {
             break
         }
 
+        let i = 0
         text.forEach(text => {
-            if (this.textTitle === text.name && this.categoryNum === text.category_id) {
+            if (this.textTitle === text.name && i === 0) {
                 textParagraph = createDOMElem('p', 'c-song', null, null, text.content)
                 this.viewElems.text.appendChild(textParagraph)
-                return
+                i++
             }
         })
     }
