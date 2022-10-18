@@ -3,7 +3,6 @@ import {getSongsCategoriesRequest, getSongsRequest, getSongsCategoriesUpdateRequ
     getLiturgyCategoriesRequest, getLiturgyRequest, getLiturgyCategoriesUpdateRequest, getLiturgyUpdateRequest,
     getAnnouncementsRequest, getIntentionsRequest
 } from "./requests.js"
-import { getLSData } from "./getsetdata.js"
 
 let songsCategoriesLastUpdateLS
 let songsLastUpdateLS
@@ -11,18 +10,6 @@ let prayersCategoriesLastUpdateLS
 let prayersLastUpdateLS
 let liturgyCategoriesLastUpdateLS
 let liturgyLastUpdateLS
-
-export const getLocalStorageData = () => {
-    return new Promise((resolve, reject) => {
-        songsCategoriesLastUpdateLS = getLSData('songsCategoriesLastUpdate')
-        songsLastUpdateLS = getLSData('songsLastUpdate')
-        prayersCategoriesLastUpdateLS = getLSData('prayersCategoriesLastUpdate')
-        prayersLastUpdateLS = getLSData('prayersLastUpdate')
-        liturgyCategoriesLastUpdateLS = getLSData('liturgyCategoriesLastUpdate')
-        liturgyLastUpdateLS = getLSData('liturgyLastUpdate')
-        resolve()
-    })
-}
 
 // Aktualizuje kategorie pieśni
 export const getSongsCategoriesUpdate = () => {

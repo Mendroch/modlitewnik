@@ -1,6 +1,6 @@
 import { mapListToDOMElements, createDOMElem } from './dominteractions.js'
 import { getTextSettings, setTextSettings, getLSData } from './getsetdata.js'
-import { getLocalStorageData, getSongsCategoriesUpdate, getSongsUpdate, getPrayersCategoriesUpdate, 
+import { getSongsCategoriesUpdate, getSongsUpdate, getPrayersCategoriesUpdate, 
     getPrayersUpdate, getLiturgyCategoriesUpdate, getLiturgyUpdate, getAnnouncements, getIntentions } from './updatecontent.js'
 import { getSongsUpdateRequest } from './requests.js'
 
@@ -39,25 +39,28 @@ class Prayo {
         this.getCategoriesAndTexts()
         getSongsUpdateRequest.then(() => {
             this.updateData()
-        }).catch(() =>  {
+        }).catch(() => {
             if (!localStorage.getItem('songsLastUpdate')) {
                 this.togglePopUp(this.viewElems.networkInformation, true)
                 this.viewElems.shadow.removeEventListener('click', this.toggleShadowWith)
                 window.addEventListener('online', () => {
-                    location.reload();
+                    location.reload()
                 })
             }
         })
     }
 
+    // Usuwa ekran ładowania
     removeLoadingScreen = () => {
         if (getLSData('intentions') !== undefined) {
             this.viewElems.loadingScreen.classList.add('h-display--none')
+        } else {
+            this.viewElems.loadingScreen.classList.remove('h-display--none')
         }
     }
 
+    // Aktualizuje teksty
     updateData = () => {
-        this.removeLoadingScreen()
         getSongsCategoriesUpdate()
         .then(getSongsUpdate)
         .then(getPrayersCategoriesUpdate)
@@ -408,6 +411,7 @@ class Prayo {
 
     // Tworzy widok listy kategorii pieśni
     switchTextsCategories = () => {
+        this.viewElems.textsCategories.scrollTo(0, 0)
         this.viewElems.textsCategories.innerHTML = ''
         this.currentView = 'textsCategories'
         this.backViewFromSearch = 'textsCategories'
@@ -442,6 +446,7 @@ class Prayo {
 
     // Tworzy widok listy tytułów pieśni
     switchTextsTitles = () => {
+        this.viewElems.textsTitles.scrollTo(0, 0)
         this.viewElems.textsTitles.innerHTML = ''
         if (this.isSearchOpened) {
             this.categoryNum = this.temporaryCategoryNum
@@ -472,6 +477,7 @@ class Prayo {
 
     // Tworzy widok pieśni
     switchText = () => {
+        this.viewElems.text.scrollTo(0, 0)
         this.viewElems.text.innerHTML = ''
         this.currentView = 'text'
         let textParagraph
